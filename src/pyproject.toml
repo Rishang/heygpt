@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "heygpt"
+name = "heygptcli"
 version = "0.1.0"
 description = ""
 authors = ["Rishang <rishang@localhost.com>"]
