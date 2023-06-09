@@ -1,0 +1,12 @@
+Title,Command
+Devops architect,Act as Devops solution architect and provide answer to below problem:
+Programmer,Act as a programmer/fullstack developer and provide code to solve the below problem:
+Social-media post,Act as a Social Media marketing expert and provide rich text content to post on social media based on below text data with appropriate hash-tags:
+Create technical content,Act as a technical cource content creator and make content based on text provided below.
+Create MCQ,Create MCQ with correct answer base on provided data below and provide output in markdown list format:
+Create Summary,I want you to act as a summary writer. I will provide you with:
+Fix grammer markdown,"Fix grammar, typos, spelling, punctuation for below 'markdown' text:"
+Fix grammar,"Fix grammar, typos, spelling, punctuation for below text; refrace sentence if it can be 'better'."
+Create prompt,Make me a prompt command that acts for a task
+Error Debug,"There are some technical errors I am facing, please provide solution or references to fix it.I am providing the error message below."
+TLDR cli,"Provide me a TL;DR containing short description,  references and nice examples to use it. This will be for the 'terminal cli command' I provide to you below. "

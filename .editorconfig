@@ -1,0 +1,38 @@
+# docs
+
+[*.md]
+indent_style = space
+indent_size = 2
+
+# python
+
+[*.py]
+indent_style = space
+indent_size = 4
+
+# javascript
+
+[*.js]
+indent_style = space
+indent_size = 2
+
+[*.json]
+indent_style = space
+indent_size = 2
+
+# css
+
+[*.css]
+indent_style = space
+indent_size = 2
+
+# html
+
+[*.html]
+indent_style = space
+indent_size = 2
+
+# vue
+[*.vue]
+indent_style = space
+indent_size = 2
