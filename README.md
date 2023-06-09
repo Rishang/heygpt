@@ -16,7 +16,7 @@ A simple command line tool to generate text using OpenAI GPT-3 or Bard base on r
 - refer: [fzf README](https://github.com/junegunn/fzf#installation) for more info on step to install `fzf`.
 
 ```bash
-pip install heygpt
+pip install heygptcli
 ```
 
 #### help page:
