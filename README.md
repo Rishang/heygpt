@@ -1,5 +1,7 @@
 # heygpt 🔮
 
+[![Downloads](https://static.pepy.tech/personalized-badge/heygptcli?period=total&units=international_system&left_color=black&right_color=blue&left_text=Downloads)](https://pepy.tech/project/heygptcli)
+
 A simple command line tool to generate text using OpenAI GPT-3 or Bard base on ready made templated promts.
 
 ## Purpose
