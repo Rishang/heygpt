@@ -8,9 +8,9 @@ from rich.console import Console
 from rich.markdown import Markdown
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import FuzzyWordCompleter
+from rich import print as pprint
 
-
-from heygpt.constant import configs, genrtare_prompt_url
+from heygpt.constant import configs, genrtare_prompt_url, openai_model
 
 console = Console()
 
@@ -19,28 +19,44 @@ load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY", configs.get("openai_key"))
 
 
+def sh(command):
+    return os.popen(command).read()
+
+
+def print_md(markdown: str, **kwargs):
+    md = Markdown(markdown)
+    console.print(md, **kwargs)
+
+
 def ask_prompt_input(items: list, title="Select item"):
     completer = FuzzyWordCompleter(items)
     text = prompt(f"{title}: ", completer=completer, complete_while_typing=True)
     return text
 
 
-def completion_openai_gpt(text: str = None, command: str = ""):
+def completion_openai_gpt(text: str = None, command: str = "", _print=False):
+    out = ""
+
     if not text:
         raise Exception("No text found")
 
-    # payload = f"{command} ```{text}```"
-
     completion = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+        model=openai_model,
+        stream=True,
         messages=[
             {"role": "user", "content": command + "\n" + text},
-            # {"role": "user", "content": text},
         ],
         # stop="",
     )
 
-    return completion
+    for chunk in completion:
+        # Process each chunk as needed
+        c = chunk["choices"][0]["delta"].get("content", "")
+        out += c
+        if _print:
+            pprint(c, end="")
+
+    return out
 
 
 def completion_bard(text: str, command: str = ""):
@@ -81,12 +97,3 @@ def wisper(audio_file):
     with open(f"{audio_file}", "rb") as file:
         transcript = openai.Audio.transcribe("whisper-1", file)
     return transcript["text"]
-
-
-def sh(command):
-    return os.popen(command).read()
-
-
-def print_md(markdown: str):
-    md = Markdown(markdown)
-    console.print(md)

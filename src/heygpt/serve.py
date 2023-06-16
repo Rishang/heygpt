@@ -60,7 +60,7 @@ with st.container():
                 completion = completion_openai_gpt(command=_selected_prompt, text=ask)
             else:
                 completion = completion_bard(command=_selected_prompt, text=ask)
-            content = completion.choices[0].message.content
+            content = completion
             st.markdown(content)
 
     with col3:

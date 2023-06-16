@@ -91,14 +91,12 @@ def ask(
     if bard:
         content = completion_bard(command=command, text=text)
     else:
-        completion = completion_openai_gpt(command=command, text=text)
-        content = completion.choices[0].message.content
+        completion = completion_openai_gpt(command=command, text=text, stream=True)
+        content = completion
 
     # typer.echo("\n---------- output ----------\n")
-    if md:
+    if bard:
         print_md(content)
-    else:
-        rich.print(content)
 
     if save:
         file_name = "output.txt"
