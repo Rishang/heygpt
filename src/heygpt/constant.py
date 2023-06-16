@@ -3,9 +3,12 @@ import csv
 import json
 from dataclasses import dataclass, field
 
+from dotenv import load_dotenv
 import requests
 from pydantic import BaseModel
 from heygpt.utils import log
+
+load_dotenv()
 
 
 @dataclass

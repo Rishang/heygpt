@@ -2,19 +2,15 @@ import os
 
 import requests
 import openai
-from dotenv import load_dotenv
 from bardapi import Bard
 from rich.console import Console
 from rich.markdown import Markdown
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import FuzzyWordCompleter
-from rich import print as pprint
 
 from heygpt.constant import configs, genrtare_prompt_url, openai_model
 
 console = Console()
-
-load_dotenv()
 
 openai.api_key = os.getenv("OPENAI_API_KEY", configs.get("openai_key"))
 
@@ -35,6 +31,9 @@ def ask_prompt_input(items: list, title="Select item"):
 
 
 def completion_openai_gpt(text: str = None, command: str = "", _print=False):
+    """
+    ref: https://docs.openai.com/api-reference/completions/create
+    """
     out = ""
 
     if not text:
@@ -44,7 +43,11 @@ def completion_openai_gpt(text: str = None, command: str = "", _print=False):
         model=openai_model,
         stream=True,
         messages=[
-            {"role": "user", "content": command + "\n" + text},
+            {
+                "role": "system",
+                "content": "Output has to be in markdown supported format",
+            },
+            {"role": "user", "content": command + "\nTask: " + text},
         ],
         # stop="",
     )
@@ -54,12 +57,12 @@ def completion_openai_gpt(text: str = None, command: str = "", _print=False):
         c = chunk["choices"][0]["delta"].get("content", "")
         out += c
         if _print:
-            pprint(c, end="")
+            console.print(c, end="", markup=True)
 
     return out
 
 
-def completion_bard(text: str, command: str = ""):
+def completion_bard(text: str, command: str = "", _print=False):
     """
     ref: https://github.com/dsdanielpark/Bard-API
     Bard is a GPT-3 model trained on 38 million lines of fantasy text.
@@ -72,7 +75,10 @@ def completion_bard(text: str, command: str = ""):
         if configs.get("bard_key"):
             os.environ["_BARD_API_KEY"] = configs.get("bard_key")
 
-    return Bard().get_answer(command + "\n" + text)["content"]
+    completer = Bard().get_answer(command + "\nTask: " + text)["content"]
+    if _print:
+        print_md(completer)
+    return completer
 
 
 def make_prompt(text: str):

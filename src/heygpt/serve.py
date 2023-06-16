@@ -2,8 +2,6 @@ import streamlit as st
 from heygpt.core import completion_openai_gpt, completion_bard
 from heygpt.serve_prompts import prompts_title
 
-# import streamlit_toggle as tog
-
 
 def local_css(file_name="", style=""):
     if file_name != "":
@@ -41,11 +39,6 @@ with col1:
 
 
 with st.container():
-    # toggle_md = tog.st_toggle_switch(
-    #     label="format",
-    #     default_value=False,
-    # )
-
     content = ""
 
     with col2:

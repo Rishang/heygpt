@@ -39,9 +39,8 @@ def ask(
         str, help="Optional provide text query as an input argument."
     ),
     tag: Annotated[Optional[List[str]], typer.Option()] = [],
-    md: bool = typer.Option(False, help="output format in markdown"),
     save: bool = typer.Option(
-        False, help="save output to file availabe formats: md, txt, html"
+        False, "--output", "-o", help="save output to file availabe formats: md"
     ),
 ):
     tags: str = " #".join(tag)
@@ -78,8 +77,7 @@ def ask(
 
     if tags.strip() != "":
         command += f"\nFor: #{tags}"
-    if md:
-        command += "use markdown format for output."
+
     if not sys.stdin.isatty():
         text = sys.stdin.read()
     elif text == "":
@@ -89,17 +87,15 @@ def ask(
 
     # log.debug(text)
     if bard:
-        content = completion_bard(command=command, text=text)
+        content = completion_bard(command=command, text=text, _print=True)
     else:
-        completion = completion_openai_gpt(command=command, text=text, stream=True)
+        completion = completion_openai_gpt(command=command, text=text, _print=True)
         content = completion
 
     # typer.echo("\n---------- output ----------\n")
-    if bard:
-        print_md(content)
 
     if save:
-        file_name = "output.txt"
+        file_name = "output.md"
         with open(f"{file_name}", "w") as f:
             f.write(content)
         rich.print(f"\n\nINFO: Output saved to: {file_name}")
