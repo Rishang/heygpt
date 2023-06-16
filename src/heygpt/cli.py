@@ -121,7 +121,7 @@ def audio2txt(audo_file: str):
 @app.command(help="Use heygpt as api server.")
 def api():
     uvicorn.run(
-        "heygpt.serve:app", port=5000, host="0.0.0.0", reload=True, log_level="info"
+        "heygpt.api:app", port=5000, host="0.0.0.0", reload=True, log_level="info"
     )
 
 
