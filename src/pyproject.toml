@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "heygptcli"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 authors = ["Rishang <rishang@localhost.com>"]
 readme = "README.md"
