@@ -39,8 +39,8 @@ def ask(
         str, help="Optional provide text query as an input argument."
     ),
     tag: Annotated[Optional[List[str]], typer.Option()] = [],
-    save: bool = typer.Option(
-        False, "--output", "-o", help="save output to file availabe formats: md"
+    save: str = typer.Option(
+        "", "--output", "-o", help="save output to file availabe formats: md"
     ),
 ):
     tags: str = " #".join(tag)
@@ -94,11 +94,10 @@ def ask(
 
     # typer.echo("\n---------- output ----------\n")
 
-    if save:
-        file_name = "output.md"
-        with open(f"{file_name}", "w") as f:
+    if save != "":
+        with open(f"{save}", "w") as f:
             f.write(content)
-        rich.print(f"\n\nINFO: Output saved to: {file_name}")
+        rich.print(f"\n\nINFO: Output saved to: {save}")
 
 
 @app.command(help="Generate new prompts.")
