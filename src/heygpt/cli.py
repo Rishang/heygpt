@@ -48,8 +48,8 @@ def ask(
 
     # print(tags)
     # return
-    prompts = load_promps(prompt_items_url)
     if not no_prompt:
+        prompts = load_promps(prompt_items_url)
         log.debug(prompts)
         prompts_title = [i.Title for i in prompts]
         try:
