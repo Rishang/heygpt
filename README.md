@@ -40,7 +40,6 @@ GPT_PROMPT_URL=<url-to-your-prompt-file>
 
 # openai
 OPENAI_API_KEY=<your-openai-api-key>
-OPENAI_ORGANIZATION=<your-openai-organization>
 
 # bard (optional)
 # ref: https://github.com/dsdanielpark/Bard-API
