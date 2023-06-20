@@ -44,7 +44,12 @@ def ask(
     save: str = typer.Option(
         "", "--output", "-o", help="save output to file availabe formats: md"
     ),
-    model: str = typer.Option(openai_model, "--model", "-m", help="OpenAI model name."),
+    model: str = typer.Option(
+        openai_model,
+        "--model",
+        "-m",
+        help="OpenAI model name. info: https://platform.openai.com/docs/models/gpt-3",
+    ),
 ):
     tags: str = " #".join(tag)
     command: str = ""

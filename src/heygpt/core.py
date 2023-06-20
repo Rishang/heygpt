@@ -9,6 +9,7 @@ from prompt_toolkit import prompt
 from prompt_toolkit.completion import FuzzyWordCompleter
 
 from heygpt.constant import configs, genrtare_prompt_url, openai_model
+from heygpt.utils import log
 
 console = Console()
 
@@ -37,28 +38,48 @@ def completion_openai_gpt(
     ref: https://docs.openai.com/api-reference/completions/create
     """
     out = ""
+    log.debug(f"model: {model}")
 
     if not text:
         raise Exception("No text found")
 
-    completion = openai.ChatCompletion.create(
-        model=model,
-        stream=True,
-        messages=[
-            {
-                "role": "system",
-                "content": "Output has to be in markdown supported format",
-            },
-            {"role": "user", "content": command + "\nTask: " + text},
-        ],
-        # stop="",
-    )
+    if command != "":
+        _command = command + "\nTask: " + text
+    else:
+        _command = text
 
-    for chunk in completion:
-        # Process each chunk as needed
-        c = chunk["choices"][0]["delta"].get("content", "")
-        out += c
-        if _print:
+    if "gpt-3" in model:
+        completion = openai.ChatCompletion.create(
+            model=model,
+            stream=True,
+            messages=[
+                {
+                    "role": "system",
+                    "content": "Output has to be in markdown supported format",
+                },
+                {"role": "user", "content": _command},
+            ],
+            # stop="",
+        )
+
+        for chunk in completion:
+            # Process each chunk as needed
+            c = chunk["choices"][0]["delta"].get("content", "")
+            out += c
+            if _print:
+                console.print(c, end="", markup=True)
+    else:
+        completion = openai.Completion.create(
+            model=model,
+            prompt=_command,
+            temperature=0.9,
+            max_tokens=1000,
+            stream=True,
+            top_p=1,
+        )
+        for chunk in completion:
+            c = chunk["choices"][0]["text"]
+            out += c
             console.print(c, end="", markup=True)
 
     return out
