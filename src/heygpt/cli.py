@@ -11,7 +11,7 @@ from rich.prompt import Prompt
 import typer
 
 from heygpt.utils import log
-from heygpt.constant import load_promps, prompt_items_url
+from heygpt.constant import load_promps, prompt_items_url, openai_model
 from heygpt.core import (
     sh,
     completion_openai_gpt,
@@ -31,7 +31,9 @@ HeyGPT CLI\n\nA simple command line tool to generate text using OpenAI GPT-3 or 
 
 @app.command(help="Ask query or task to gpt using prompt templates")
 def ask(
-    bard: bool = typer.Option(False, "--bard", "-b", help="Use bard instead of gpt-3."),
+    bard: bool = typer.Option(
+        False, "--bard", "-b", help="Use bard instead of openai."
+    ),
     no_prompt: bool = typer.Option(
         False, "--no-prompt", "-n", help="Ask without anyprompt templates."
     ),
@@ -42,6 +44,7 @@ def ask(
     save: str = typer.Option(
         "", "--output", "-o", help="save output to file availabe formats: md"
     ),
+    model: str = typer.Option(openai_model, "--model", "-m", help="OpenAI model name."),
 ):
     tags: str = " #".join(tag)
     command: str = ""
@@ -89,7 +92,9 @@ def ask(
     if bard:
         content = completion_bard(command=command, text=text, _print=True)
     else:
-        completion = completion_openai_gpt(command=command, text=text, _print=True)
+        completion = completion_openai_gpt(
+            command=command, text=text, model=model, _print=True
+        )
         content = completion
 
     # typer.echo("\n---------- output ----------\n")

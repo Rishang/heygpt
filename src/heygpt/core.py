@@ -30,7 +30,9 @@ def ask_prompt_input(items: list, title="Select item"):
     return text
 
 
-def completion_openai_gpt(text: str = None, command: str = "", _print=False):
+def completion_openai_gpt(
+    text: str = None, command: str = "", model=openai_model, _print=False
+):
     """
     ref: https://docs.openai.com/api-reference/completions/create
     """
@@ -40,7 +42,7 @@ def completion_openai_gpt(text: str = None, command: str = "", _print=False):
         raise Exception("No text found")
 
     completion = openai.ChatCompletion.create(
-        model=openai_model,
+        model=model,
         stream=True,
         messages=[
             {
