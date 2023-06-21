@@ -24,7 +24,7 @@ from heygpt.core import (
 
 app = typer.Typer(
     help="""
-HeyGPT CLI\n\nA simple command line tool to generate text using OpenAI GPT-3 or Bard base on ready made templated promts.
+HeyGPT CLI\n\nA simple command line tool to generate text using OpenAI GPT or Bard base on ready made templated promts.
 \n\n\nFor debug logs use: `export LOG_LEVEL=DEBUG` or `set LOG_LEVEL=DEBUG` on windows."""
 )
 
@@ -48,7 +48,7 @@ def ask(
         openai_model,
         "--model",
         "-m",
-        help="OpenAI model name. info: https://platform.openai.com/docs/models/gpt-3",
+        help="OpenAI model name. info: https://platform.openai.com/docs/models/",
     ),
 ):
     tags: str = " #".join(tag)
