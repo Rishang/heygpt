@@ -50,6 +50,12 @@ def ask(
         "-m",
         help="OpenAI model name. info: https://platform.openai.com/docs/models/",
     ),
+    temperature: float = typer.Option(
+        0.5,
+        "--temperature",
+        "-t",
+        help="temperature value for openai, more temperature more randomness",
+    ),
 ):
     tags: str = " #".join(tag)
     command: str = ""
@@ -98,7 +104,11 @@ def ask(
         content = completion_bard(command=command, text=text, _print=True)
     else:
         completion = completion_openai_gpt(
-            command=command, text=text, model=model, _print=True
+            command=command,
+            text=text,
+            model=model,
+            _print=True,
+            temperature=temperature,
         )
         content = completion
 

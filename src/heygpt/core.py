@@ -32,7 +32,11 @@ def ask_prompt_input(items: list, title="Select item"):
 
 
 def completion_openai_gpt(
-    text: str = None, command: str = "", model=openai_model, _print=False
+    text: str = None,
+    command: str = "",
+    model=openai_model,
+    _print=False,
+    temperature=0.7,
 ):
     """
     ref: https://docs.openai.com/api-reference/completions/create
@@ -52,6 +56,7 @@ def completion_openai_gpt(
         completion = openai.ChatCompletion.create(
             model=model,
             stream=True,
+            temperature=temperature,
             messages=[
                 {
                     "role": "system",
@@ -72,7 +77,7 @@ def completion_openai_gpt(
         completion = openai.Completion.create(
             model=model,
             prompt=_command,
-            temperature=0.9,
+            temperature=temperature,
             max_tokens=1000,
             stream=True,
             top_p=1,
