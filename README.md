@@ -2,11 +2,11 @@
 
 [![Downloads](https://static.pepy.tech/personalized-badge/heygptcli?period=total&units=international_system&left_color=black&right_color=blue&left_text=Downloads)](https://pepy.tech/project/heygptcli)
 
-A simple command line tool to generate text using OpenAI GPT-3 or Bard base on ready made templated promts.
+A simple command line tool to generate text using OpenAI GPT or Bard base on ready made templated promts.
 
 ## Purpose
 
-- To provide a simple command line tool to generate text using GPT-3 or Bard based on ready made templated prompts, in both `cli` as well as `web-ui` interface.
+- To provide a simple command line tool to generate text using GPT or Bard based on ready made templated prompts, in both `cli` as well as `web-ui` interface.
 
 - [CLI demo](./.github/images/demo.gif)
 
@@ -107,7 +107,7 @@ heygpt ask
 - `heygpt` will ask you to choose a prompt from a list of available templates.
 - After that it will ask you to enter your query/task and will provide you with the result based on type of prompt you selected.
 
-- If you want to see output from bard instead of openai gpt-3, you can pass `--bard` flag to `ask` command.
+- If you want to see output from bard instead of openai gpt, you can pass `--bard` flag to `ask` command.
 
 ```bash
 heygpt ask --bard
