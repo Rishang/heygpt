@@ -18,8 +18,10 @@ app.add_middleware(
 
 
 @app.post("/gpt")
-async def gpt(msg: PromptInput):
-    return completion_openai_gpt(command=msg.prompt.Command, text=f"""{msg.text}""")
+async def gpt(msg: PromptInput, model: str = "gpt-3.5-turbo"):
+    return completion_openai_gpt(
+        command=msg.prompt.Command, text=f"""{msg.text}""", model=model
+    )
 
 
 @app.get("/prompt-items")

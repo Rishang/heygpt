@@ -17,22 +17,22 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="collapsed",
 )
-st.write("<h5 style='text-align: center'>HeyGPT</h5><br>", unsafe_allow_html=True)
 
 col1, col2, col3 = st.columns([2, 5, 1])
 
 with st.container():
     col4, col5, col6 = st.columns([2, 5, 1])
-    with col5:
+    with col2:
         ask = st.text_area("**Input**:", height=80)
         print_prompt = st.empty()
-    with col6:
+    with col3:
         st.write("<br><br><br>", unsafe_allow_html=True)
         submit = st.button("Submit")
 
 
 with col1:
-    use_bard = st.checkbox("Ask Bard", value=False)
+    _options = {"GPT": "gpt-3.5-turbo", "Davinci": "text-davinci-003", "Bard": "bard"}
+    use_model = st.radio("**Model**", options=_options.keys())
     prompt = st.radio(
         label="**Promots**", options=["None"] + list(prompts_title.keys())
     )
@@ -49,8 +49,10 @@ with st.container():
             _selected_prompt = ""
 
         if submit:
-            if not use_bard:
-                completion = completion_openai_gpt(command=_selected_prompt, text=ask)
+            if use_model != "Bard":
+                completion = completion_openai_gpt(
+                    command=_selected_prompt, text=ask, model=_options[use_model]
+                )
             else:
                 completion = completion_bard(command=_selected_prompt, text=ask)
             content = completion
