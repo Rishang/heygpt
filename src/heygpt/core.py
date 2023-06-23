@@ -48,7 +48,7 @@ def completion_openai_gpt(
         raise Exception("No text found")
 
     if command != "":
-        _command = command + "\nTask: " + text
+        _command = command + "\n\n" + text
     else:
         _command = text
 
