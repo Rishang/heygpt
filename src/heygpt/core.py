@@ -85,7 +85,8 @@ def completion_openai_gpt(
         for chunk in completion:
             c = chunk["choices"][0]["text"]
             out += c
-            console.print(c, end="", markup=True)
+            if _print:
+                console.print(c, end="", markup=True)
 
     return out
 
