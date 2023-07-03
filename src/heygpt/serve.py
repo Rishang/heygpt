@@ -53,10 +53,16 @@ with st.container():
                 completion = completion_openai_gpt(
                     command=_selected_prompt, text=ask, model=_options[use_model]
                 )
+                if "davinci" in use_model.lower():
+                    st.markdown(f"```{completion}")
+                else:
+                    st.markdown(completion)
+
             else:
                 completion = completion_bard(command=_selected_prompt, text=ask)
+                st.markdown(completion)
+
             content = completion
-            st.markdown(content)
 
     with col3:
         if content != "":
