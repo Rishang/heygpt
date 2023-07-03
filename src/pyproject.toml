@@ -23,6 +23,7 @@ openai = "^0.27.8"
 rich = "^13.4.1"
 prompt-toolkit = "^3.0.38"
 streamlit = "^1.23.1"
+google-generativeai = "^0.1.0"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.3.2"
