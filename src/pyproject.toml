@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "heygptcli"
-version = "0.1.6"
+version = "0.1.7"
 description = ""
 authors = ["Rishang <rishang@localhost.com>"]
 readme = "README.md"
@@ -18,7 +18,6 @@ fastapi = "^0.97.0"
 uvicorn = "^0.22.0"
 typer = "^0.9.0"
 python-dotenv = "^1.0.0"
-bardapi = "^0.1.11"
 openai = "^0.27.8"
 rich = "^13.4.1"
 prompt-toolkit = "^3.0.38"

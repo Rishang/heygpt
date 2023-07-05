@@ -15,7 +15,7 @@ from heygpt.constant import load_promps, prompt_items_url, openai_model
 from heygpt.core import (
     sh,
     completion_openai_gpt,
-    completion_bard,
+    completion_palm_text,
     make_prompt,
     wisper,
     print_md,
@@ -24,15 +24,15 @@ from heygpt.core import (
 
 app = typer.Typer(
     help="""
-HeyGPT CLI\n\nA simple command line tool to generate text using OpenAI GPT or Bard base on ready made templated promts.
+HeyGPT CLI\n\nA simple command line tool to generate text using OpenAI GPT or palm base on ready made templated promts.
 \n\n\nFor debug logs use: `export LOG_LEVEL=DEBUG` or `set LOG_LEVEL=DEBUG` on windows."""
 )
 
 
 @app.command(help="Ask query or task to gpt using prompt templates")
 def ask(
-    bard: bool = typer.Option(
-        False, "--bard", "-b", help="Use bard instead of openai."
+    palm: bool = typer.Option(
+        False, "--palm", "-b", help="Use palm instead of openai."
     ),
     no_prompt: bool = typer.Option(
         False, "--no-prompt", "-n", help="Ask without anyprompt templates."
@@ -100,8 +100,8 @@ def ask(
         text = Prompt.ask("[blue]Enter text")
 
     # log.debug(text)
-    if bard:
-        content = completion_bard(command=command, text=text, _print=True)
+    if palm:
+        content = completion_palm_text(command=command, text=text, _print=True)
     else:
         completion = completion_openai_gpt(
             command=command,
@@ -157,7 +157,7 @@ def config(
     prompt_file: str = typer.Option("", help="Prompt file path."),
     prompt_url: str = typer.Option("", help="Prompt file url."),
     openai_key: str = typer.Option("", help="OpenAI API key."),
-    bard_key: str = typer.Option("", help="Bard API key."),
+    palm_key: str = typer.Option("", help="palm API key."),
 ):
     from heygpt.constant import config_path
 
@@ -179,8 +179,8 @@ def config(
             configs["prompt_url"] = prompt_url
         if openai_key != "":
             configs["openai_key"] = openai_key
-        if bard_key != "":
-            configs["bard_key"] = bard_key
+        if palm_key != "":
+            configs["palm_key"] = palm_key
 
         new_configs = configs
         print(json.dumps(new_configs))

@@ -2,7 +2,7 @@ import os
 
 import requests
 import openai
-from bardapi import Bard
+import google.generativeai as palm
 from rich.console import Console
 from rich.markdown import Markdown
 from prompt_toolkit import prompt
@@ -91,20 +91,39 @@ def completion_openai_gpt(
     return out
 
 
-def completion_bard(text: str, command: str = "", _print=False):
+def completion_palm_text(text: str, command: str = "", _print=False):
     """
-    ref: https://github.com/dsdanielpark/Bard-API
-    Bard is a GPT-3 model trained on 38 million lines of fantasy text.
-
-    This function requires "_BARD_API_KEY" which can get from below steps:
-    Go to https://bard.google.com/
-        : Go to Application → Cookies → __Secure-1PSID. Copy the value of that cookie.
+    ref: https://developers.generativeai.google/api/python/google/generativeai/generate_text
     """
-    if os.environ.get("_BARD_API_KEY") == None:
-        if configs.get("bard_key"):
-            os.environ["_BARD_API_KEY"] = configs.get("bard_key")
+    if os.environ.get("PALM_API_KEY") == None:
+        if configs.get("palm_key"):
+            os.environ["PALM_API_KEY"] = configs.get("palm_key")
 
-    completer = Bard().get_answer(command + "\nTask: " + text)["content"]
+    palm.configure(api_key=os.environ.get("PALM_API_KEY"))
+
+    defaults = {
+        "model": "models/text-bison-001",
+        "temperature": 0.7,
+        "candidate_count": 1,
+        "top_k": 40,
+        "top_p": 0.95,
+        "max_output_tokens": 1024,
+        "stop_sequences": [],
+        "safety_settings": [
+            # {"category": "HARM_CATEGORY_DEROGATORY", "threshold": 1},
+            # {"category": "HARM_CATEGORY_TOXICITY", "threshold": 1},
+            # {"category": "HARM_CATEGORY_VIOLENCE", "threshold": 2},
+            # {"category": "HARM_CATEGORY_SEXUAL", "threshold": 2},
+            # {"category": "HARM_CATEGORY_MEDICAL", "threshold": 2},
+            # {"category": "HARM_CATEGORY_DANGEROUS", "threshold": 2},
+        ],
+    }
+    prompt = f"""{command}
+
+    {text}"""
+    response = palm.generate_text(**defaults, prompt=prompt)
+
+    completer = response.result
     if _print:
         print_md(completer)
     return completer

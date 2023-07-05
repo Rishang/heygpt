@@ -1,5 +1,5 @@
 import streamlit as st
-from heygpt.core import completion_openai_gpt, completion_bard
+from heygpt.core import completion_openai_gpt, completion_palm_text
 from heygpt.serve_prompts import prompts_title
 
 
@@ -31,7 +31,7 @@ with st.container():
 
 
 with col1:
-    _options = {"GPT": "gpt-3.5-turbo", "Davinci": "text-davinci-003", "Bard": "bard"}
+    _options = {"GPT": "gpt-3.5-turbo", "Davinci": "text-davinci-003", "Palm": "palm"}
     use_model = st.radio("**Model**", options=_options.keys())
     prompt = st.radio(
         label="**Promots**", options=["None"] + list(prompts_title.keys())
@@ -49,7 +49,7 @@ with st.container():
             _selected_prompt = ""
 
         if submit:
-            if use_model != "Bard":
+            if use_model != "Palm":
                 completion = completion_openai_gpt(
                     command=_selected_prompt, text=ask, model=_options[use_model]
                 )
@@ -59,7 +59,7 @@ with st.container():
                     st.markdown(completion)
 
             else:
-                completion = completion_bard(command=_selected_prompt, text=ask)
+                completion = completion_palm_text(command=_selected_prompt, text=ask)
                 st.markdown(completion)
 
             content = completion

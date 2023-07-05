@@ -2,11 +2,11 @@
 
 [![Downloads](https://static.pepy.tech/personalized-badge/heygptcli?period=total&units=international_system&left_color=black&right_color=blue&left_text=Downloads)](https://pepy.tech/project/heygptcli)
 
-A simple command line tool to generate text using OpenAI GPT or Bard base on ready made templated promts.
+A simple command line tool to generate text using OpenAI GPT or Palm base on ready made templated promts.
 
 ## Purpose
 
-- To provide a simple command line tool to generate text using GPT or Bard based on ready made templated prompts, in both `cli` as well as `web-ui` interface.
+- To provide a simple command line tool to generate text using GPT or Palm based on ready made templated prompts, in both `cli` as well as `web-ui` interface.
 
 - [CLI demo](./.github/images/demo.gif)
 
@@ -41,9 +41,9 @@ GPT_PROMPT_URL=<url-to-your-prompt-file>
 # openai
 OPENAI_API_KEY=<your-openai-api-key>
 
-# bard (optional)
-# ref: https://github.com/dsdanielpark/Bard-API
-_BARD_API_KEY=<your-bard-api-key>
+# palm (optional)
+# ref: https://github.com/dsdanielpark/palm-API
+_BARD_API_KEY=<your-palm-api-key>
 ```
 
 In order to configure them you can use `heygpt config` command:
@@ -59,7 +59,7 @@ In order to configure them you can use `heygpt config` command:
 │ --prompt-file        TEXT  Prompt file path.              │
 │ --prompt-url         TEXT  Prompt file url.               │
 │ --openai-key         TEXT  OpenAI API key <Required>.     │
-│ --bard-key           TEXT  Bard API key.                  │
+│ --palm-key           TEXT  Palm API key.                  │
 │ --help                     Show this message and exit.    │
 +───────────────────────────────────────────────────────────+
 ```
@@ -107,10 +107,10 @@ heygpt ask
 - `heygpt` will ask you to choose a prompt from a list of available templates.
 - After that it will ask you to enter your query/task and will provide you with the result based on type of prompt you selected.
 
-- If you want to see output from bard instead of openai gpt, you can pass `--bard` flag to `ask` command.
+- If you want to see output from palm instead of openai gpt, you can pass `--palm` flag to `ask` command.
 
 ```bash
-heygpt ask --bard
+heygpt ask --palm
 ```
 
 - For asking queries without any prompt templates you can use `--no-prompt` flag.
