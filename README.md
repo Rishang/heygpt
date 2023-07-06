@@ -43,7 +43,7 @@ OPENAI_API_KEY=<your-openai-api-key>
 
 # palm (optional)
 # ref: https://github.com/dsdanielpark/palm-API
-_BARD_API_KEY=<your-palm-api-key>
+PALM_API_KEY=<your-palm-api-key>
 ```
 
 In order to configure them you can use `heygpt config` command:
