@@ -3,7 +3,7 @@ DevOps architect,Act as Devops solution architect and provide answers to the bel
 Programmer,Act as a programmer/full-stack developer and provide code to solve the below problem:
 Social-media post,Act as a Social Media Marketing expert and provide rich text content to post on social media based on the below text data with appropriate hash-tags:
 Create technical content,Act as a technical course content creator and make content based on the text provided below.
-Create MCQ,Create MCQ with the correct answer base on provided data below, and provide output in markdown list format:
+Create MCQ,"Create MCQ with the correct answer base on provided data below, and provide output in markdown list format:"
 Create Summary,I want you to act as a summary writer. I will provide you with:
 Fix grammar markdown,"Fix grammar, typos, spelling, punctuation for below 'markdown' text:"
 Fix grammar,"Fix grammar, typos, spelling, punctuation for below text; reference sentence if it can be 'better'."
