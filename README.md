@@ -2,7 +2,7 @@
 
 [![Downloads](https://static.pepy.tech/personalized-badge/heygptcli?period=total&units=international_system&left_color=black&right_color=blue&left_text=Downloads)](https://pepy.tech/project/heygptcli)
 
-A simple command line tool to generate text using OpenAI GPT or Palm base on ready made templated promts.
+A simple command line tool to generate text using OpenAI GPT or Palm based on ready made templated prompts.
 
 ## Purpose
 
@@ -15,7 +15,7 @@ A simple command line tool to generate text using OpenAI GPT or Palm base on rea
 ## Installation
 
 - There is an optional dependency of `fzf` for interactive prompt selection. You can install it using your package manager.
-- refer: [fzf README](https://github.com/junegunn/fzf#installation) for more info on step to install `fzf`.
+- refer: [fzf README](https://github.com/junegunn/fzf#installation) for more info on steps to install `fzf`.
 
 ```bash
 pip install heygptcli
@@ -31,7 +31,7 @@ For debug logs use: `export LOG_LEVEL=DEBUG` or `set LOG_LEVEL=DEBUG` on windows
 
 ## Configuration
 
-You will need openai api credentials to use `heygpt`. You can get them from [here](https://beta.openai.com/).
+You will need openai API credentials to use `heygpt`. You can get them from [here](https://beta.openai.com/).
 
 
 ```bash
@@ -80,7 +80,7 @@ Here, `--prompt-url ` and `--prompt-file` is optional. If you want to use own cu
 prompts.
 
 
-For providing a url of `csv` file containing your prompts.
+For providing a URL of `csv` file containing your prompts.
   
 ```bash
 # remote csv file
@@ -89,7 +89,7 @@ heygpt config --prompt-url <url-to-your-prompt-file.csv>
 
 Note: This is the default csv used for prompts: [default-prompts.csv](./prompts.csv), for using your own prompts, you need to follow the same format as in this file.
 
-For your own prompts by providing a url to a `csv` file containing your prompts. You can also use local `csv` file by providing a relative path to it.
+For your own prompts by providing a URL to a `csv` file containing your prompts. You can also use local `csv` file by providing a relative path to it.
 
 ```bash
 # local csv file
@@ -105,7 +105,7 @@ heygpt ask
 ```
 
 - `heygpt` will ask you to choose a prompt from a list of available templates.
-- After that it will ask you to enter your query/task and will provide you with the result based on type of prompt you selected.
+- After that, it will ask you to enter your query/task and will provide you with the result based on type of prompt you selected.
 
 - If you want to see output from palm instead of openai gpt, you can pass `--palm` flag to `ask` command.
 
@@ -149,7 +149,7 @@ heygpt stream
 This will start a `streamlit` server on `localhost`:
 
 
-#### Using `heygpt` as a api:
+#### Using `heygpt` as an API:
 
 ```bash
 heygpt api
