@@ -24,25 +24,25 @@ from heygpt.core import (
 
 app = typer.Typer(
     help="""
-HeyGPT CLI\n\nA simple command line tool to generate text using OpenAI GPT or palm base on ready made templated promts.
+HeyGPT CLI\n\nA simple command line tool to generate text using OpenAI GPT or Google Palm based on ready-made templated prompts.
 \n\n\nFor debug logs use: `export LOG_LEVEL=DEBUG` or `set LOG_LEVEL=DEBUG` on windows."""
 )
 
 
-@app.command(help="Ask query or task to gpt using prompt templates")
+@app.command(help="Ask query or task to GPT using prompt templates")
 def ask(
     palm: bool = typer.Option(
-        False, "--palm", "-b", help="Use palm instead of openai."
+        False, "--palm", "-b", help="Use google palm instead of openai."
     ),
     no_prompt: bool = typer.Option(
-        False, "--no-prompt", "-n", help="Ask without anyprompt templates."
+        False, "--no-prompt", "-n", help="Ask without any prompt templates."
     ),
     text: str = typer.Option(
         str, help="Optional provide text query as an input argument."
     ),
     tag: Annotated[Optional[List[str]], typer.Option()] = [],
     save: str = typer.Option(
-        "", "--output", "-o", help="save output to file availabe formats: md"
+        "", "--output", "-o", help="save output to file available formats: md"
     ),
     model: str = typer.Option(
         openai_model,
