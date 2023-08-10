@@ -38,9 +38,6 @@ genrtare_prompt_url = os.environ.get(
     "https://api-inference.huggingface.co/models/merve/chatgpt-prompt-generator-v12",
 )
 
-openai_model = os.getenv("OPENAI_MODEL", "gpt-3.5-turbo")
-
-
 def get_config_path(app: str = "heygpt"):
     if os.name == "nt":  # Windows
         return os.path.expanduser(f"~\\AppData\\Roaming\\{app}\\config.json")
@@ -86,3 +83,4 @@ def load_promps(url: str = ""):
 
     prompts = [Prompt(**i) for i in _all_renders]  # type: ignore
     return prompts
+

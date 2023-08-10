@@ -11,8 +11,9 @@ from rich.prompt import Prompt
 import typer
 
 from heygpt.utils import log
-from heygpt.constant import load_promps, prompt_items_url, openai_model
+from heygpt.constant import load_promps, prompt_items_url
 from heygpt.core import (
+    openai_model,
     sh,
     completion_openai_gpt,
     completion_palm_text,
@@ -157,6 +158,8 @@ def config(
     prompt_file: str = typer.Option("", help="Prompt file path."),
     prompt_url: str = typer.Option("", help="Prompt file url."),
     openai_key: str = typer.Option("", help="OpenAI API key."),
+    openai_org: str = typer.Option("", help="OpenAI organization id."),
+    openai_model: str = typer.Option("", help="OpenAI model name."),
     palm_key: str = typer.Option("", help="palm API key."),
 ):
     from heygpt.constant import config_path
@@ -181,6 +184,11 @@ def config(
             configs["openai_key"] = openai_key
         if palm_key != "":
             configs["palm_key"] = palm_key
+        if openai_org != "":
+            configs["openai_org"] = openai_org
+        if openai_model != "":
+            configs["openai_model"] = openai_model
+
 
         new_configs = configs
         print(json.dumps(new_configs))

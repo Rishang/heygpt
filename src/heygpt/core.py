@@ -8,13 +8,14 @@ from rich.markdown import Markdown
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import FuzzyWordCompleter
 
-from heygpt.constant import configs, genrtare_prompt_url, openai_model
+from heygpt.constant import configs, genrtare_prompt_url
 from heygpt.utils import log
 
 console = Console()
 
 openai.api_key = os.getenv("OPENAI_API_KEY", configs.get("openai_key"))
-
+openai.organization = os.getenv("OPENAI_ORG", configs.get("openai_org"))
+openai_model = os.getenv("OPENAI_MODEL", configs.get("openai_model"))
 
 def sh(command):
     return os.popen(command).read()
