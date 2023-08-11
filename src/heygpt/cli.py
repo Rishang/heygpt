@@ -26,7 +26,8 @@ from heygpt.core import (
 app = typer.Typer(
     help="""
 HeyGPT CLI\n\nA simple command line tool to generate text using OpenAI GPT or Google Palm based on ready-made templated prompts.
-\n\n\nFor debug logs use: `export LOG_LEVEL=DEBUG` or `set LOG_LEVEL=DEBUG` on windows."""
+\n\n\nFor debug logs use: `export LOG_LEVEL=DEBUG` or `set LOG_LEVEL=DEBUG` on windows.""",
+    pretty_exceptions_enable=False,
 )
 
 
