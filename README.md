@@ -39,7 +39,8 @@ GPT_PROMPT_URL=<url-to-your-prompt-file>
 
 # openai
 OPENAI_API_KEY=<your-openai-api-key>
-OPENAI_ORGANIZATION=<org-*****> # optional
+OPENAI_ORG=<org-*****> # optional openai organization id
+OPENAI_MODEL=gpt-4 # optional openai model name
 
 # palm (optional)
 # ref: https://github.com/dsdanielpark/palm-API
