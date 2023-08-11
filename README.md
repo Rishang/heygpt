@@ -10,7 +10,7 @@ A simple command line tool to generate text using OpenAI GPT or Palm based on re
 
 - [CLI demo](./.github/images/demo.gif)
 
-- [UI  demo](./.github/images/stream.png)
+- [UI demo](./.github/images/stream.png)
 
 ## Installation
 
@@ -33,13 +33,13 @@ For debug logs use: `export LOG_LEVEL=DEBUG` or `set LOG_LEVEL=DEBUG` on windows
 
 You will need openai API credentials to use `heygpt`. You can get them from [here](https://beta.openai.com/).
 
-
 ```bash
 # gpt custom prompts (optional)
 GPT_PROMPT_URL=<url-to-your-prompt-file>
 
 # openai
 OPENAI_API_KEY=<your-openai-api-key>
+OPENAI_ORGANIZATION=<org-*****> # optional
 
 # palm (optional)
 # ref: https://github.com/dsdanielpark/palm-API
@@ -50,38 +50,41 @@ In order to configure them you can use `heygpt config` command:
 
 ```bash
 ❯ heygpt config --help
-                                                                                                      
- Usage: heygpt config [OPTIONS]                                                                       
-                                                                                                      
- Configure heygpt.                                                                                    
-                                                                                                      
-+─ Options ─────────────────────────────────────────────────+
-│ --prompt-file        TEXT  Prompt file path.              │
-│ --prompt-url         TEXT  Prompt file url.               │
-│ --openai-key         TEXT  OpenAI API key <Required>.     │
-│ --palm-key           TEXT  Palm API key.                  │
-│ --help                     Show this message and exit.    │
-+───────────────────────────────────────────────────────────+
-```
 
+ Usage: heygpt config [OPTIONS]
+
+ Configure heygpt.
+
+╭─ Options -------------------------------------------------+
+│ --prompt-file         TEXT  Prompt file path.             |
+│ --prompt-url          TEXT  Prompt file url.              |
+│ --openai-key          TEXT  OpenAI API key.               |
+│ --openai-org          TEXT  OpenAI organization id.       |
+│ --openai-model        TEXT  OpenAI model name.            |
+│ --palm-key            TEXT  palm API key.                 |
+|                                                           |
+│ --help                      Show this message and exit.   |
+------------------------------------------------------------+
+```
 
 ```bash
 heygpt config --openai-key <your-openai-api-key>
 ```
+
 ### Using local/remote prompts
 
 Prompt csv formate
+
 ```csv
 Title,Command
 <Your title for promot>,<your command for promopt>
 ```
 
-Here, `--prompt-url ` and `--prompt-file` is optional. If you want to use own custom 
+Here, `--prompt-url ` and `--prompt-file` is optional. If you want to use own custom
 prompts.
 
-
 For providing a URL of `csv` file containing your prompts.
-  
+
 ```bash
 # remote csv file
 heygpt config --prompt-url <url-to-your-prompt-file.csv>
@@ -126,7 +129,7 @@ heygpt wisper ../path/to/audio.mp3
 ```
 
 - You can provide standard output as well to `heygpt ask`
-  
+
   ```bash
   echo "why sky is blue" | heygpt ask --no-prompt
   ```
@@ -137,7 +140,6 @@ heygpt wisper ../path/to/audio.mp3
   heygpt wisper ../path/to/audio.mp3 | heygpt ask
   ```
 
-
 #### Using `heygpt` in Web-UI mode:
 
 ![](./.github/images/stream.png)
@@ -147,7 +149,6 @@ heygpt stream
 ```
 
 This will start a `streamlit` server on `localhost`:
-
 
 #### Using `heygpt` as an API:
 
