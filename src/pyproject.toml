@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "heygptcli"
-version = "0.1.7"
+version = "0.1.8"
 description = ""
 authors = ["Rishang <rishang@localhost.com>"]
 readme = "README.md"
@@ -13,15 +13,15 @@ heygpt = "heygpt.cli:app"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-requests = "^2.31.0"
-fastapi = "^0.97.0"
-uvicorn = "^0.22.0"
-typer = "^0.9.0"
+requests = "*"
+fastapi = "*"
+uvicorn = "*"
+typer = "*"
 python-dotenv = "^1.0.0"
 openai = "^0.27.8"
 rich = "^13.4.1"
 prompt-toolkit = "^3.0.38"
-streamlit = "^1.23.1"
+streamlit = "^1.25.0"
 google-generativeai = "^0.1.0"
 
 [tool.poetry.group.dev.dependencies]

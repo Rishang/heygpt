@@ -8,14 +8,20 @@ from rich.markdown import Markdown
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import FuzzyWordCompleter
 
-from heygpt.constant import configs, genrtare_prompt_url
-from heygpt.utils import log
+from heygpt.constant import configs
+from heygpt.utils import log, notNone
 
 console = Console()
 
 openai.api_key = os.getenv("OPENAI_API_KEY", configs.get("openai_key"))
 openai.organization = os.getenv("OPENAI_ORG", configs.get("openai_org"))
-openai_model = os.getenv("OPENAI_MODEL", configs.get("openai_model"))
+
+__openai_model__ = os.getenv("OPENAI_MODEL", configs.get("openai_model"))
+if notNone(__openai_model__, str):
+    openai_model = __openai_model__
+else:
+    openai_model = "gpt-3.5-turbo"
+
 
 def sh(command):
     return os.popen(command).read()
@@ -35,6 +41,7 @@ def ask_prompt_input(items: list, title="Select item"):
 def completion_openai_gpt(
     text: str = None,
     command: str = "",
+    system: str = "",
     model=openai_model,
     _print=False,
     temperature=0.7,
@@ -53,7 +60,7 @@ def completion_openai_gpt(
     else:
         _command = text
 
-    if "gpt-3" in model:
+    if "gpt-" in model:
         completion = openai.ChatCompletion.create(
             model=model,
             stream=True,
@@ -61,7 +68,7 @@ def completion_openai_gpt(
             messages=[
                 {
                     "role": "system",
-                    "content": "Output has to be in markdown supported format",
+                    "content": f"Output has to be in markdown supported format.\n{system}",
                 },
                 {"role": "user", "content": _command},
             ],
@@ -126,26 +133,8 @@ def completion_palm_text(text: str, command: str = "", _print=False):
 
     completer = response.result
     if _print:
-        print_md(completer)
+        print(completer)
     return completer
-
-
-def make_prompt(text: str):
-    json_data = {
-        "inputs": f"""{text}""",
-    }
-
-    response = requests.post(
-        genrtare_prompt_url,
-        json=json_data,
-    )
-
-    if response.status_code != 200:
-        raise Exception(
-            f"Request failed with code {response.status_code}: {response.text}"
-        )
-    res = response.json()
-    return res[0]
 
 
 def wisper(audio_file):

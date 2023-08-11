@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from heygpt.core import completion_openai_gpt, make_prompt
+from heygpt.core import completion_openai_gpt, openai_model
+from heygpt.prompts import make_prompt, PromptInput
 
-from heygpt.constant import PromptInput
 from heygpt.serve_prompts import prompts
 
 app = FastAPI()
@@ -18,7 +18,7 @@ app.add_middleware(
 
 
 @app.post("/gpt")
-async def gpt(msg: PromptInput, model: str = "gpt-3.5-turbo"):
+async def gpt(msg: PromptInput, model: str = openai_model):
     return completion_openai_gpt(
         command=msg.prompt.Command, text=f"""{msg.text}""", model=model
     )

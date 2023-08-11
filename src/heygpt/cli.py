@@ -11,13 +11,13 @@ from rich.prompt import Prompt
 import typer
 
 from heygpt.utils import log
-from heygpt.constant import load_promps, prompt_items_url
+from heygpt.constant import prompt_items_url
+from heygpt.prompts import load_promps, make_prompt
 from heygpt.core import (
     openai_model,
     sh,
     completion_openai_gpt,
     completion_palm_text,
-    make_prompt,
     wisper,
     print_md,
     ask_prompt_input,
@@ -42,9 +42,7 @@ def ask(
         str, help="Optional provide text query as an input argument."
     ),
     tag: Annotated[Optional[List[str]], typer.Option()] = [],
-    save: str = typer.Option(
-        "", "--output", "-o", help="save output to file available formats: md"
-    ),
+    save: str = typer.Option("", "--output", "-o", help="Save output to file."),
     model: str = typer.Option(
         openai_model,
         "--model",
@@ -55,7 +53,13 @@ def ask(
         0.5,
         "--temperature",
         "-t",
-        help="temperature value for openai, more temperature more randomness",
+        help="Temperature value for openai, more temperature more randomness",
+    ),
+    raw: bool = typer.Option(
+        False,
+        "--raw",
+        "-r",
+        help="Print response in raw text format, default is rich markdown format",
     ),
 ):
     tags: str = " #".join(tag)
@@ -102,16 +106,19 @@ def ask(
 
     # log.debug(text)
     if palm:
-        content = completion_palm_text(command=command, text=text, _print=True)
+        content = completion_palm_text(command=command, text=text, _print=raw)
     else:
         completion = completion_openai_gpt(
             command=command,
             text=text,
             model=model,
-            _print=True,
+            _print=raw,
             temperature=temperature,
         )
         content = completion
+
+    if not raw:
+        print_md(content)
 
     # typer.echo("\n---------- output ----------\n")
 
@@ -188,7 +195,6 @@ def config(
             configs["openai_org"] = openai_org
         if openai_model != "":
             configs["openai_model"] = openai_model
-
 
         new_configs = configs
         print(json.dumps(new_configs))

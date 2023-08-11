@@ -1,6 +1,9 @@
 import logging
 import os
 from rich.logging import RichHandler
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 def _logger(flag: str = "", format: str = ""):
@@ -31,5 +34,14 @@ def _logger(flag: str = "", format: str = ""):
 
 
 # message
-# export loglevel=DEBUG
+# export LOG_LEVEL=DEBUG
 log = _logger("LOG_LEVEL")
+
+
+def notNone(data, type):
+    if isinstance(data, str) and len(data.strip()) == 0:
+        return False
+    elif isinstance(data, type) and len(data) != 0:
+        return True
+    else:
+        return False

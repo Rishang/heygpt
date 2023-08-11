@@ -1,6 +1,7 @@
 import streamlit as st
-from heygpt.core import completion_openai_gpt, completion_palm_text
+from heygpt.core import completion_openai_gpt, completion_palm_text, openai_model
 from heygpt.serve_prompts import prompts_title
+from heygpt.utils import log
 
 
 def local_css(file_name="", style=""):
@@ -31,7 +32,11 @@ with st.container():
 
 
 with col1:
-    _options = {"GPT": "gpt-3.5-turbo", "Davinci": "text-davinci-003", "Palm": "palm"}
+    _options = {
+        f"{openai_model.upper()}": f"{openai_model}",
+        "Davinci": "text-davinci-003",
+        "Palm": "palm",
+    }
     use_model = st.radio("**Model**", options=_options.keys())
     prompt = st.radio(
         label="**Promots**", options=["None"] + list(prompts_title.keys())
