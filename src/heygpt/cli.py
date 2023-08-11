@@ -100,7 +100,7 @@ def ask(
     if not sys.stdin.isatty():
         text = sys.stdin.read()
     elif text == "":
-        rich.print(f"Selected: {command}") if not no_prompt else ...
+        rich.print(f"[yellow]Selected:[/yellow] {command}") if not no_prompt else ...
         print()
         text = Prompt.ask("[blue]Enter text")
 
