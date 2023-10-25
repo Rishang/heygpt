@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "heygptcli"
-version = "0.2.1"
+version = "0.2.2"
 description = ""
 authors = ["Rishang <rishang@localhost.com>"]
 readme = "README.md"
@@ -18,11 +18,11 @@ fastapi = "*"
 uvicorn = "*"
 typer = "*"
 python-dotenv = "^1.0.0"
-openai = "^0.28.1"
+openai = "*"
 rich = "*"
 prompt-toolkit = "^3.0.39"
-streamlit = "^1.27.0"
-google-generativeai = "^0.1.0"
+streamlit = "*"
+google-generativeai = "*"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.3.2"
