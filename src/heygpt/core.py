@@ -61,7 +61,7 @@ def completion_openai_gpt(
         _command = text
 
     if "gpt-" in model:
-        completion = openai.ChatCompletion.create(
+        completion = openai.chat.completions.create(
             model=model,
             stream=True,
             temperature=temperature,
@@ -77,12 +77,13 @@ def completion_openai_gpt(
 
         for chunk in completion:
             # Process each chunk as needed
-            c = chunk["choices"][0]["delta"].get("content", "")
+            c = chunk.choices[0].delta.content or ""
             out += c
             if _print:
                 console.print(c, end="", markup=True)
     else:
-        completion = openai.Completion.create(
+        raise Exception("Invalid model GPT allowed for now")
+        completion = openai.completions.create(
             model=model,
             prompt=_command,
             temperature=temperature,
