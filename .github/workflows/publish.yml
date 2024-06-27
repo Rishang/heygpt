@@ -19,7 +19,7 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-       
+
       - name: Config Poetry
         working-directory: ./src
         run: |
@@ -35,4 +35,5 @@ jobs:
       - name: publish
         working-directory: ./src
         run: |
-          poetry publish -u ${{ secrets.USERNAME }} -p ${{ secrets.PASSWORD }}
+          poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
+          poetry publish

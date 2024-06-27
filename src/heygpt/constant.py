@@ -4,10 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-prompt_items_url = os.environ.get(
-    "GPT_PROMPT_URL",
-    "https://raw.githubusercontent.com/Rishang/heygpt/main/prompts.csv",
-)
+prompt_items_url = os.environ.get("GPT_PROMPT_URL", "")
 
 genrtare_prompt_url = os.environ.get(
     "PROMPT_GENERATE_URL",

@@ -1,5 +1,7 @@
 import csv
+import yaml
 from dataclasses import dataclass, field
+from typing import List, Union
 
 import requests
 from pydantic import BaseModel
@@ -13,7 +15,7 @@ class Prompt:
     Title: str
     Command: str
     System: str = field(default_factory=str)
-    Tags: list[str] = field(default_factory=list)
+    Tags: List[str] = field(default_factory=list)
 
 
 class PromptInput(BaseModel):
@@ -25,27 +27,41 @@ class PromptResponse(BaseModel):
     message: str
 
 
-def load_promps(url: str = ""):
+def load_prompts(url: str = ""):
     log.debug("Loading prompts...")
     _all_renders = []
-    if isinstance(configs.get("prompt_url"), str) and configs.get(
-        "prompt_url"
-    ).endswith(".csv"):
-        r = requests.get(configs.get("prompt_url"))
-        reader = csv.DictReader(r.text.splitlines())
-        _all_renders.extend(list(reader))
 
-    if isinstance(configs.get("prompt_file"), str) and configs.get(
-        "prompt_file"
-    ).endswith(".csv"):
-        with open(f"{configs.get('prompt_file')}", "r") as f:
-            reader = csv.DictReader(f)
-            _all_renders.extend(list(reader))
+    def load_csv(data: str):
+        reader = csv.DictReader(data.splitlines())
+        return list(reader)
 
-    if isinstance(url, str) and url.endswith(".csv"):
-        r = requests.get(url)
-        reader = csv.DictReader(r.text.splitlines())
-        _all_renders.extend(list(reader))
+    def load_yaml(data: str):
+        return yaml.safe_load(data)
+
+    if isinstance(configs.get("prompt_url"), str):
+        prompt_url = configs.get("prompt_url")
+        if prompt_url.endswith(".csv"):
+            r = requests.get(prompt_url)
+            _all_renders.extend(load_csv(r.text))
+        elif prompt_url.endswith(".yaml") or prompt_url.endswith(".yml"):
+            r = requests.get(prompt_url)
+            _all_renders.extend(load_yaml(r.text))
+
+    if isinstance(configs.get("prompt_file"), str):
+        prompt_file = configs.get("prompt_file")
+        with open(prompt_file, "r") as f:
+            if prompt_file.endswith(".csv"):
+                _all_renders.extend(load_csv(f.read()))
+            elif prompt_file.endswith(".yaml") or prompt_file.endswith(".yml"):
+                _all_renders.extend(load_yaml(f.read()))
+
+    if isinstance(url, str):
+        if url.endswith(".csv"):
+            r = requests.get(url)
+            _all_renders.extend(load_csv(r.text))
+        elif url.endswith(".yaml") or url.endswith(".yml"):
+            r = requests.get(url)
+            _all_renders.extend(load_yaml(r.text))
     else:
         raise Exception("Invalid url")
 

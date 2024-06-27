@@ -12,7 +12,7 @@ import typer
 
 from heygpt.utils import log
 from heygpt.constant import prompt_items_url
-from heygpt.prompts import load_promps, make_prompt
+from heygpt.prompts import load_prompts, make_prompt
 from heygpt.core import (
     openai_model,
     sh,
@@ -69,7 +69,7 @@ def ask(
     # print(tags)
     # return
     if not no_prompt:
-        prompts = load_promps(prompt_items_url)
+        prompts = load_prompts(prompt_items_url)
         log.debug(prompts)
         prompts_title = [i.Title for i in prompts]
         try:
