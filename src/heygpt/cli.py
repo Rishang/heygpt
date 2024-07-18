@@ -88,6 +88,7 @@ def ask(
         for i in prompts:
             if i.Title == act:
                 command = i.Command
+                system = i.System
                 log.debug(command)
                 _found_prompt = True
                 break
@@ -111,6 +112,7 @@ def ask(
     else:
         completion = completion_openai_gpt(
             command=command,
+            system=system,
             text=text,
             model=model,
             _print=raw,

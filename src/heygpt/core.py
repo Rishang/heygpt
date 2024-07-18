@@ -51,6 +51,11 @@ def completion_openai_gpt(
     """
     out = ""
     log.debug(f"model: {model}")
+    log.debug(f"command: {command}")
+    log.debug(f"system: {system}")
+    log.debug(f"text: {text}")
+    if system == "":
+        system = "Output has to be in markdown supported format.\n"
 
     if not text:
         raise Exception("No text found")
@@ -68,9 +73,10 @@ def completion_openai_gpt(
             messages=[
                 {
                     "role": "system",
-                    "content": f"Output has to be in markdown supported format.\n{system}",
+                    "content": f"{system}",
                 },
-                {"role": "user", "content": _command},
+                {"role": "user", "content": command},
+                {"role": "user", "content": text},
             ],
             # stop="",
         )
