@@ -50,6 +50,7 @@ def ask(
         "-m",
         help="OpenAI model name. info: https://platform.openai.com/docs/models/",
     ),
+    system: str = typer.Option("", "--system", "-s", help="System name for prompt."),
     temperature: float = typer.Option(
         0.5,
         "--temperature",
