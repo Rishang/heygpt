@@ -1,9 +1,10 @@
 import streamlit as st
-from heygpt.core import model
-from litellm import completion
-from heygpt.serve_prompts import prompts_title
-from heygpt.prompts import openai_fmt_prompt
 import pyperclip  # type: ignore
+from litellm import completion
+
+from heygpt.core import model
+from heygpt.serve_prompts import prompts_title
+from heygpt.prompts import openai_fmt_prompt, configs
 
 
 def local_css(file_name="", style=""):
@@ -21,10 +22,9 @@ st.set_page_config(
 )
 
 # Sidebar content
-_options = {
-    f"{model}": f"{model}",
-}
-_ai_models = st.sidebar.selectbox("**Model**", _options.keys())
+_options = configs.get("available_models", [model])
+_ai_models = st.sidebar.selectbox("**Model**", _options)
+# st.success(f"Selected model: {_ai_models}")
 user_model = _ai_models
 
 prompt = st.sidebar.radio(

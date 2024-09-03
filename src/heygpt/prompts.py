@@ -60,16 +60,11 @@ def load_prompts(url: str = ""):
     if isinstance(configs.get("prompt_file"), str):
         prompt_file = configs.get("prompt_file")
         with open(prompt_file, "r") as f:
-            if prompt_file.endswith(".csv"):
-                _all_renders.extend(load_csv(f.read()))
-            elif prompt_file.endswith(".yaml") or prompt_file.endswith(".yml"):
+            if prompt_file.endswith(".yaml") or prompt_file.endswith(".yml"):
                 _all_renders.extend(load_yaml(f.read()))
 
     if isinstance(url, str):
-        if url.endswith(".csv"):
-            r = requests.get(url)
-            _all_renders.extend(load_csv(r.text))
-        elif url.endswith(".yaml") or url.endswith(".yml"):
+        if url.endswith(".yaml") or url.endswith(".yml"):
             r = requests.get(url)
             _all_renders.extend(load_yaml(r.text))
     else:

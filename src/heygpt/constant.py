@@ -26,5 +26,7 @@ config_path = get_config_path()
 try:
     with open(config_path, "r") as f:
         configs = json.loads(f.read())
+        if "openai_key" in configs:
+            os.environ["OPENAI_API_KEY"] = configs["openai_key"]
 except FileNotFoundError:
     configs = {}

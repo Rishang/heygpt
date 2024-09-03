@@ -108,6 +108,23 @@ For your own prompts by providing a URL to a `yaml` file containing your prompts
 heygpt config --prompt-file ~/path/to/prompts.yaml
 ```
 
+```
+# ~/.config/heygpt/config.json
+# You can manually add list of `available_models` in config file for easy access in streamlit UI.
+
+{
+    "openai_key": "sk-proj-********",
+    "model": "gpt-4o",
+    "available_models": [
+        "gpt-4o",
+        "chatgpt-4o-latest",
+        "gpt-4o-mini",
+        "gpt-3.5-turbo"
+    ],
+    "prompt_file": "/home/user/.config/heygpt/prompt.yaml"
+}
+```
+
 ## Usage Examples
 
 #### Asking `heygpt` to perform a cretain task based on prompt template:
