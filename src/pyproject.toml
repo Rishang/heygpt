@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "heygptcli"
-version = "0.2.7"
+version = "0.3.0"
 description = ""
 authors = ["Rishang <rishang@localhost.com>"]
 readme = "README.md"
@@ -24,6 +24,8 @@ prompt-toolkit = "^3.0.39"
 streamlit = "*"
 google-generativeai = "*"
 pyyaml = "^6.0.1"
+litellm = "^1.44.14"
+pyperclip = "^1.9.0"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.3.2"

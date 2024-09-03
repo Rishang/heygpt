@@ -11,11 +11,24 @@ from heygpt.constant import configs, genrtare_prompt_url
 
 
 @dataclass
+class Message:
+    role: str
+    content: str
+
+    def __post_init__(self):
+        valid_roles = ["user", "assistant", "system"]
+        if self.role not in valid_roles:
+            raise ValueError(f"role must be either of {valid_roles}")
+
+
+@dataclass
 class Prompt:
     Title: str
-    Command: str
-    System: str = field(default_factory=str)
+    Command: list[Message]
     Tags: List[str] = field(default_factory=list)
+
+    def __post_init__(self):
+        self.Command = [Message(**i) for i in self.Command]  # type: ignore
 
 
 class PromptInput(BaseModel):
@@ -40,10 +53,7 @@ def load_prompts(url: str = ""):
 
     if isinstance(configs.get("prompt_url"), str):
         prompt_url = configs.get("prompt_url")
-        if prompt_url.endswith(".csv"):
-            r = requests.get(prompt_url)
-            _all_renders.extend(load_csv(r.text))
-        elif prompt_url.endswith(".yaml") or prompt_url.endswith(".yml"):
+        if prompt_url.endswith(".yaml") or prompt_url.endswith(".yml"):
             r = requests.get(prompt_url)
             _all_renders.extend(load_yaml(r.text))
 
@@ -67,6 +77,10 @@ def load_prompts(url: str = ""):
 
     prompts = [Prompt(**i) for i in _all_renders]  # type: ignore
     return prompts
+
+
+def openai_fmt_prompt(messages: list[Message]):
+    return [{"role": message.role, "content": message.content} for message in messages]
 
 
 def make_prompt(text: str):

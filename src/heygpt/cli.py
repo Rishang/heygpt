@@ -14,10 +14,9 @@ from heygpt.utils import log
 from heygpt.constant import prompt_items_url
 from heygpt.prompts import load_prompts, make_prompt
 from heygpt.core import (
-    openai_model,
+    model as _model,
     sh,
     completion_openai_gpt,
-    completion_palm_text,
     wisper,
     print_md,
     ask_prompt_input,
@@ -25,7 +24,7 @@ from heygpt.core import (
 
 app = typer.Typer(
     help="""
-HeyGPT CLI\n\nA simple command line tool to generate text using OpenAI GPT or Google Palm based on ready-made templated prompts.
+HeyGPT CLI\n\nA simple command line tool to generate text using OpenAI GPT or Google Gemini based on ready-made templated prompts.
 \n\n\nFor debug logs use: `export LOG_LEVEL=DEBUG` or `set LOG_LEVEL=DEBUG` on windows.""",
     pretty_exceptions_enable=False,
 )
@@ -33,9 +32,6 @@ HeyGPT CLI\n\nA simple command line tool to generate text using OpenAI GPT or Go
 
 @app.command(help="Ask query or task to GPT using prompt templates")
 def ask(
-    palm: bool = typer.Option(
-        False, "--palm", "-b", help="Use google palm instead of openai."
-    ),
     no_prompt: bool = typer.Option(
         False, "--no-prompt", "-n", help="Ask without any prompt templates."
     ),
@@ -45,12 +41,11 @@ def ask(
     tag: Annotated[Optional[List[str]], typer.Option()] = [],
     save: str = typer.Option("", "--output", "-o", help="Save output to file."),
     model: str = typer.Option(
-        openai_model,
+        _model,
         "--model",
         "-m",
-        help="OpenAI model name. info: https://platform.openai.com/docs/models/",
+        help=f"default {_model} | OpenAI model name. info: https://platform.openai.com/docs/models/",
     ),
-    system: str = typer.Option("", "--system", "-s", help="System name for prompt."),
     temperature: float = typer.Option(
         0.5,
         "--temperature",
@@ -65,7 +60,7 @@ def ask(
     ),
 ):
     tags: str = " #".join(tag)
-    command: str = ""
+    command: list = []
 
     # print(tags)
     # return
@@ -89,7 +84,6 @@ def ask(
         for i in prompts:
             if i.Title == act:
                 command = i.Command
-                system = i.System
                 log.debug(command)
                 _found_prompt = True
                 break
@@ -98,7 +92,7 @@ def ask(
             return
 
     if tags.strip() != "":
-        command += f"\nFor: #{tags}"
+        text += f"\nFor: #{tags}"
 
     if not sys.stdin.isatty():
         text = sys.stdin.read()
@@ -108,18 +102,15 @@ def ask(
         text = Prompt.ask("[blue]Enter text")
 
     # log.debug(text)
-    if palm:
-        content = completion_palm_text(command=command, text=text, _print=raw)
-    else:
-        completion = completion_openai_gpt(
-            command=command,
-            system=system,
-            text=text,
-            model=model,
-            _print=raw,
-            temperature=temperature,
-        )
-        content = completion
+
+    completion = completion_openai_gpt(
+        command=command,
+        text=text,
+        model=model,
+        _print=raw,
+        temperature=temperature,
+    )
+    content = completion
 
     if not raw:
         print_md(content)
@@ -170,8 +161,7 @@ def config(
     prompt_url: str = typer.Option("", help="Prompt file url."),
     openai_key: str = typer.Option("", help="OpenAI API key."),
     openai_org: str = typer.Option("", help="OpenAI organization id."),
-    openai_model: str = typer.Option("", help="OpenAI model name."),
-    palm_key: str = typer.Option("", help="palm API key."),
+    model: str = typer.Option("", help="LLM model name."),
 ):
     from heygpt.constant import config_path
 
@@ -193,12 +183,10 @@ def config(
             configs["prompt_url"] = prompt_url
         if openai_key != "":
             configs["openai_key"] = openai_key
-        if palm_key != "":
-            configs["palm_key"] = palm_key
         if openai_org != "":
             configs["openai_org"] = openai_org
-        if openai_model != "":
-            configs["openai_model"] = openai_model
+        if model != "":
+            configs["model"] = model
 
         new_configs = configs
         print(json.dumps(new_configs))

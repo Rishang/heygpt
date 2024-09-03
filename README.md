@@ -40,11 +40,9 @@ GPT_PROMPT_URL=<url-to-your-prompt-file>
 # openai
 OPENAI_API_KEY=<your-openai-api-key>
 OPENAI_ORG=<org-*****> # optional openai organization id
-OPENAI_MODEL=gpt-4 # optional openai model name
+MODEL=gpt-4o # optional openai model name (default: gpt-3.5-turbo)
 
-# palm (optional)
-# ref: https://github.com/dsdanielpark/palm-API
-PALM_API_KEY=<your-palm-api-key>
+
 ```
 
 In order to configure them you can use `heygpt config` command:
@@ -56,17 +54,17 @@ In order to configure them you can use `heygpt config` command:
 
  Configure heygpt.
 
-╭─ Options -------------------------------------------------+
-│ --prompt-file         TEXT  Prompt file path.             |
-│ --prompt-url          TEXT  Prompt file url.              |
-│ --openai-key          TEXT  OpenAI API key.               |
-│ --openai-org          TEXT  OpenAI organization id.       |
-│ --openai-model        TEXT  OpenAI model name.            |
-│ --palm-key            TEXT  palm API key.                 |
-|                                                           |
-│ --help                      Show this message and exit.   |
-------------------------------------------------------------+
+╭─ Options -----------------------------------------------------+
+│ --prompt-file         TEXT  Prompt file path.                 |
+│ --prompt-url          TEXT  Prompt file url.                  |
+│ --openai-key          TEXT  OpenAI API key.                   |
+│ --openai-org          TEXT  OpenAI organization id.           |
+| --model               TEXT  Default model name [OpenAI/Gemini]|
+│ --help                      Show this message and exit.       |
+----------------------------------------------------------------+
 ```
+
+Default model name is `gpt-3.5-turbo` for this tool. You can change it to `gpt-4o` or any other model name you want to use.
 
 ```bash
 heygpt config --openai-key <your-openai-api-key>
@@ -74,30 +72,40 @@ heygpt config --openai-key <your-openai-api-key>
 
 ### Using local/remote prompts
 
-Prompt csv formate
+Prompt YAML formate
 
-```csv
-Title,Command
-<Your title for promot>,<your command for promopt>
+```yaml
+# ~/path/to/prompts.yaml
+- Title: Fix Grammar
+  Command:
+    - role: user
+      content: |
+        Review the provided text and correct any grammatical errors. Ensure that the text is clear, concise, and free of any spelling mistakes.
+```
+
+To use your saved prompts run:
+
+```
+heygpt config --prompt-file ~/path/to/prompts.yaml
 ```
 
 Here, `--prompt-url ` and `--prompt-file` is optional. If you want to use own custom
 prompts.
 
-For providing a URL of `csv` file containing your prompts.
+For providing a URL of `yaml` file containing your prompts.
 
 ```bash
-# remote csv file
-heygpt config --prompt-url <url-to-your-prompt-file.csv>
+# remote yaml file
+heygpt config --prompt-url <url-to-your-prompt-file.yaml>
 ```
 
-Note: This is the default csv used for prompts: [default-prompts.csv](./prompts.csv), for using your own prompts, you need to follow the same format as in this file.
+Note: This is the default yaml used for prompts: [default-prompts.yaml](./prompts.yaml), for using your own prompts, you need to follow the same format as in this file.
 
-For your own prompts by providing a URL to a `csv` file containing your prompts. You can also use local `csv` file by providing a relative path to it.
+For your own prompts by providing a URL to a `yaml` file containing your prompts. You can also use local `yaml` file by providing a relative path to it.
 
 ```bash
-# local csv file
-heygpt config --prompt-file ~/path/to/prompts.csv
+# local yaml file
+heygpt config --prompt-file ~/path/to/prompts.yaml
 ```
 
 ## Usage Examples
