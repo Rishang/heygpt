@@ -1,8 +1,7 @@
 import csv
 import yaml
 from dataclasses import dataclass, field
-from typing import List, Union
-
+from typing import List
 import requests
 from pydantic import BaseModel
 
@@ -24,7 +23,7 @@ class Message:
 @dataclass
 class Prompt:
     Title: str
-    Command: list[Message]
+    Command: List[Message]
     Tags: List[str] = field(default_factory=list)
 
     def __post_init__(self):
@@ -71,10 +70,14 @@ def load_prompts(url: str = ""):
         raise Exception("Invalid url")
 
     prompts = [Prompt(**i) for i in _all_renders]  # type: ignore
+
+    # Sort the prompts by Title
+    prompts.sort(key=lambda p: p.Title.lower())
+
     return prompts
 
 
-def openai_fmt_prompt(messages: list[Message]):
+def openai_fmt_prompt(messages: List[Message]):
     return [{"role": message.role, "content": message.content} for message in messages]
 
 
