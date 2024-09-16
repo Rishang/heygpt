@@ -23,9 +23,7 @@ st.set_page_config(
 
 # Sidebar content
 _options = configs.get("available_models", [model])
-_ai_models = st.sidebar.selectbox("**Model**", _options)
-# st.success(f"Selected model: {_ai_models}")
-user_model = _ai_models
+user_model: str = st.sidebar.selectbox("**Model**", _options)
 
 prompt = st.sidebar.radio(
     label="**Promots**", options=["None"] + list(prompts_title.keys())
