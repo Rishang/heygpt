@@ -5,7 +5,6 @@ from litellm import completion
 from heygpt.core import model
 from heygpt.serve_prompts import prompts_title
 from heygpt.prompts import openai_fmt_prompt, configs
-from io import StringIO
 
 
 def local_css(file_name="", style=""):
@@ -27,11 +26,6 @@ _options = configs.get("available_models", [model])
 _ai_models = st.sidebar.selectbox("**Model**", _options)
 # st.success(f"Selected model: {_ai_models}")
 user_model = _ai_models
-uploaded_files = st.sidebar.file_uploader(
-    "**Upload files**",
-    type=["txt", "md", "json", "csv", "py", "js", "html", "yml", "yaml"],
-    accept_multiple_files=True,
-)
 
 prompt = st.sidebar.radio(
     label="**Promots**", options=["None"] + list(prompts_title.keys())
@@ -48,47 +42,28 @@ for message in st.session_state.messages:
 
 # React to user input
 if chat_input := st.chat_input("What is up?"):
-    # Read uploaded files
-    uploaded_file_string = ""
-    if isinstance(uploaded_files, list):
-        for uploaded_file in uploaded_files:
-            # To read file as bytes:
-            uploaded_file_string += f"```{uploaded_file.name}\n"
 
-            uploaded_file_string += StringIO(
-                uploaded_file.getvalue().decode("utf-8")
-            ).read()
-            uploaded_file_string += f"\n```endof {uploaded_file.name}"
+    # set stream to True if model is OpenAI
+    stream = True
+    if user_model.startswith("o1-"):
+        stream = False
 
     # Display user message in chat message container
     st.chat_message("user").markdown(chat_input)
 
     # Add user message to chat history
     if prompt == "None":
-        if uploaded_file_string:
-            st.session_state.messages.append(
-                {
-                    "role": "user",
-                    "content": f"\n{uploaded_file_string}```\n{chat_input}",
-                }
-            )
-        else:
-            st.session_state.messages.append({"role": "user", "content": chat_input})
+        st.session_state.messages.append({"role": "user", "content": chat_input})
     else:
         for i in openai_fmt_prompt(prompts_title[prompt]):
+            print(prompt)
             st.session_state.messages.append(i)
 
-        # Add user message to chat history
-        if uploaded_file_string:
-            st.session_state.messages[-1]["content"] += f"\n{uploaded_file_string}```"
         st.session_state.messages[-1]["content"] += f"```\n{chat_input}"
 
     # response = f"Echo: {prompts_title[prompt]}"
-    # Send user message to AI model and get response
     ai_response = completion(
-        model=user_model,
-        messages=st.session_state.messages,
-        stream=True,
+        model=user_model, messages=st.session_state.messages, stream=stream
     )
 
     # response = ai_response["choices"][0]["message"]["content"]
@@ -104,9 +79,15 @@ if chat_input := st.chat_input("What is up?"):
 
     # response = ai_response["choices"][0]["message"]["content"]
     # Display assistant response in chat message container
+    # stream = False
     with st.chat_message("assistant"):
         # st.markdown("\n" + response)
-        st.write_stream(stream_data)
+        if stream:
+            st.write_stream(stream_data)
+        else:
+            #  ai_response.choices[0].delta.content or ""
+            st.markdown("\n" + "".join(ai_response.choices[0].message.content or ""))
+            response.append(ai_response.choices[0].message.content or "")
 
     # Add assistant response to chat history from the stream_data
 
