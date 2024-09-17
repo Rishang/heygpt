@@ -40,7 +40,6 @@ for message in st.session_state.messages:
 
 # React to user input
 if chat_input := st.chat_input("What is up?"):
-
     # set stream to True if model is OpenAI
     stream = True
     if user_model.startswith("o1-"):

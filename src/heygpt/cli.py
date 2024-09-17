@@ -102,14 +102,26 @@ def ask(
         text = Prompt.ask("[blue]Enter text")
 
     # log.debug(text)
+    stream = False
+    if model.startswith("o1"):
+        completion = completion_openai_gpt(
+            command=command,
+            text=text,
+            model=model,
+            _print=raw,
+            stream=stream,
+        )
+    else:
+        stream = True
+        completion = completion_openai_gpt(
+            command=command,
+            text=text,
+            model=model,
+            _print=raw,
+            temperature=temperature,
+            stream=stream,
+        )
 
-    completion = completion_openai_gpt(
-        command=command,
-        text=text,
-        model=model,
-        _print=raw,
-        temperature=temperature,
-    )
     content = completion
 
     if not raw:

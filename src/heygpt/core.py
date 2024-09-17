@@ -43,7 +43,8 @@ def completion_openai_gpt(
     system: str = "",
     model=model,
     _print=False,
-    temperature=0.7,
+    temperature=None,
+    stream=True,
 ):
     """
     ref: https://docs.openai.com/api-reference/completions/create
@@ -66,21 +67,31 @@ def completion_openai_gpt(
     else:
         messages = [{"role": "user", "content": text}]
 
-    chat_completion = completion(
-        model=model,
-        messages=messages,
-        temperature=temperature,
-        stream=True,
-    )
+    if stream:
+        chat_completion = completion(
+            model=model,
+            messages=messages,
+            temperature=temperature,
+            stream=True,
+        )
 
-    for chunk in chat_completion:
-        # Process each chunk as needed
-        c = chunk.choices[0].delta.content or ""
-        out += c
-        if _print:
-            console.print(c, end="", markup=True)
+        for chunk in chat_completion:
+            # Process each chunk as needed
+            c = chunk.choices[0].delta.content or ""
+            out += c
+            if _print:
+                console.print(c, end="", markup=True)
 
-    return out
+        return out
+    else:
+        chat_completion = completion(
+            model=model,
+            messages=messages,
+            temperature=temperature,
+            stream=False,
+        )
+
+        return chat_completion.choices[0].message.content
 
 
 def wisper(audio_file):
