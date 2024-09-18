@@ -4,6 +4,14 @@
 
 A simple command line tool to generate text using OpenAI GPT or Palm based on ready made templated prompts.
 
+#### Using `heygpt` in Web-UI mode:
+
+```bash
+heygpt stream
+```
+
+![](./.github/images/stream.png)
+
 ## Purpose
 
 - To provide a simple command line tool to generate text using GPT or Palm based on ready made templated prompts, in both `cli` as well as `web-ui` interface.
@@ -165,14 +173,6 @@ heygpt wisper ../path/to/audio.mp3
   ```bash
   heygpt wisper ../path/to/audio.mp3 | heygpt ask
   ```
-
-#### Using `heygpt` in Web-UI mode:
-
-![](./.github/images/stream.png)
-
-```bash
-heygpt stream
-```
 
 This will start a `streamlit` server on `localhost`:
 
