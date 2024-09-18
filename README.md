@@ -107,7 +107,7 @@ For providing a URL of `yaml` file containing your prompts.
 heygpt config --prompt-url <url-to-your-prompt-file.yaml>
 ```
 
-Note: This is the default yaml used for prompts: [default-prompts.yaml](./prompts.yaml), for using your own prompts, you need to follow the same format as in this file.
+Note: This is the default yaml used for prompts: [default-prompts.yaml](./example-prompts.yaml), for using your own prompts, you need to follow the same format as in this file.
 
 For your own prompts by providing a URL to a `yaml` file containing your prompts. You can also use local `yaml` file by providing a relative path to it.
 
