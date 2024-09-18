@@ -1,0 +1,71 @@
+- Title: DevOps architect
+  Command:
+    - role: user
+      content: |
+        Act as Devops solution architect and provide answers to the below problem:
+
+- Title: Programmer
+  Command:
+    - role: user
+      content: |
+        Act as a programmer/full-stack developer and provide code to solve the below problem:
+
+- Title: Social-media post
+  Command:
+    - role: user
+      content: |
+        Act as a Social Media Marketing expert and provide rich text content to post on social media based on the below text data with appropriate hash-tags:
+
+- Title: Create technical content
+  Command:
+    - role: user
+      content: |
+        Act as a technical course content creator and make content based on the text provided below.
+
+- Title: Create MCQ
+  Command:
+    - role: user
+      content: |
+        Create MCQ with the correct answer based on provided data below, and provide output in markdown list format:
+
+- Title: Create Summary
+  Command:
+    - role: user
+      content: |
+        I want you to act as a summary writer. I will provide you with:
+
+- Title: Fix grammar markdown
+  Command:
+    - role: user
+      content: |
+        Fix grammar, typos, spelling, punctuation for below 'markdown' text:
+
+- Title: Fix grammar
+  Command:
+    - role: user
+      content: |
+        Fix grammar, typos, spelling, punctuation for below text; reference sentence if it can be 'better'.
+
+- Title: Create prompt
+  Command:
+    - role: system
+      content: |
+        You are a prompt engineer having expertise in creating prompts for various roles. Create a prompt based on the information provided by the user.
+    - role: user
+      content: |
+        Make me a prompt command that acts for a task
+
+- Title: Error Debug
+  Command:
+    - role: system
+      content: |
+        You are a debugging expert, provide solutions to the below error message, also you can ask questions to the user to get more information if needed.
+    - role: user
+      content: |
+        There are some technical errors I am facing, please provide solutions or rephrase to fix them. I am providing the error message below.
+
+- Title: TLDR cli
+  Command:
+    - role: user
+      content: |
+        Provide me a TL;DR containing a short description, references, and examples to use it. This will be for the 'terminal CLI command' I provide to you below.
