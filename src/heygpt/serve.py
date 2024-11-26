@@ -99,14 +99,14 @@ if st.session_state.messages:
     with col1:
         col_btn1, col_btn_2, col_btn_3 = col1.columns(3)
         with col_btn1:
-            copy_snippet = st.button("🗒")
+            copy_snippet = st.button("🗒️")
             if copy_snippet:
                 last_response = st.session_state.messages[-1]["content"]
                 pyperclip.copy(last_response)
 
         with col_btn_2:
             st.download_button(
-                label="⇩",
+                label="⬇️",
                 data=st.session_state.messages[-1]["content"],
                 file_name="heygpt_output.txt",
                 mime="text/text",
