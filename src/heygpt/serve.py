@@ -44,7 +44,7 @@ for message in st.session_state.messages:
 if chat_input := st.chat_input("What is up?"):
     # set stream to True if model is OpenAI
     stream = True
-    if user_model.startswith("o1-"):
+    if user_model.startswith("o1"):
         stream = False
 
     # Display user message in chat message container
