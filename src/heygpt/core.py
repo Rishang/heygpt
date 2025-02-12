@@ -73,6 +73,7 @@ def completion_openai_gpt(
             messages=messages,
             temperature=temperature,
             stream=True,
+            drop_params=True,
         )
 
         for chunk in chat_completion:
@@ -89,6 +90,7 @@ def completion_openai_gpt(
             messages=messages,
             temperature=temperature,
             stream=False,
+            drop_params=True,
         )
 
         return chat_completion.choices[0].message.content

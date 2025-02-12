@@ -23,6 +23,8 @@ st.set_page_config(
 
 # Sidebar content
 _options = configs.get("available_models", [model])
+# audio = st.sidebar.audio_input("Record a voice message")
+
 user_model: str = st.sidebar.selectbox("**Model**", _options)
 
 prompt = st.sidebar.radio(
@@ -60,7 +62,10 @@ if chat_input := st.chat_input("What is up?"):
 
     # response = f"Echo: {prompts_title[prompt]}"
     ai_response = completion(
-        model=user_model, messages=st.session_state.messages, stream=stream
+        model=user_model,
+        messages=st.session_state.messages,
+        stream=stream,
+        drop_params=True,
     )
 
     # response = ai_response["choices"][0]["message"]["content"]
