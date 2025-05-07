@@ -28,5 +28,12 @@ try:
         configs = json.loads(f.read())
         if "openai_key" in configs:
             os.environ["OPENAI_API_KEY"] = configs["openai_key"]
+        if "openai_endpoint" in configs:
+            os.environ["OPENAI_BASE_URL"] = configs.get(
+                "openai_endpoint", "https://api.openai.com/v1"
+            )
+            if "https://openrouter.ai/api/v1" in configs.get("openai_endpoint", ""):
+                os.environ["OPENROUTER_API_BASE"] = configs["openai_endpoint"]
+                os.environ["OPENROUTER_API_KEY"] = configs["openai_key"]
 except FileNotFoundError:
     configs = {}

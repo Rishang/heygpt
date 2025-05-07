@@ -172,6 +172,7 @@ def config(
     prompt_file: str = typer.Option("", help="Prompt file path."),
     prompt_url: str = typer.Option("", help="Prompt file url."),
     openai_key: str = typer.Option("", help="OpenAI API key."),
+    openai_endpoint: str = typer.Option("", help="OpenAI endpoint."),
     openai_org: str = typer.Option("", help="OpenAI organization id."),
     model: str = typer.Option("", help="LLM model name."),
 ):
@@ -197,6 +198,8 @@ def config(
             configs["openai_key"] = openai_key
         if openai_org != "":
             configs["openai_org"] = openai_org
+        if openai_endpoint != "":
+            configs["openai_endpoint"] = openai_endpoint
         if model != "":
             configs["model"] = model
 

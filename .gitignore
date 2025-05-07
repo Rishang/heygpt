@@ -189,3 +189,4 @@ coverage
 temp/
 temp_*
 tmp/
+temp-*
