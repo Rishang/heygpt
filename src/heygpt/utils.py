@@ -7,13 +7,13 @@ load_dotenv()
 
 
 def _logger(flag: str = "", format: str = ""):
-    if format == "" or format == None:
+    if format == "" or format is None:
         format = "%(levelname)s|%(name)s| %(message)s"
 
     # message
     logger = logging.getLogger(__name__)
 
-    if os.environ.get(flag) != None:
+    if os.environ.get(flag) is not None:
         logger.setLevel(logging.DEBUG)
     else:
         logger.setLevel(logging.INFO)

@@ -25,7 +25,16 @@ st.set_page_config(
 _options = configs.get("available_models", [model])
 # audio = st.sidebar.audio_input("Record a voice message")
 
-user_model: str = st.sidebar.selectbox("**Model**", _options)
+
+def format_model_name(model_name: str) -> str:
+    if model_name.startswith("openrouter/"):
+        return model_name.replace("openrouter/", "", 1)
+    return model_name
+
+
+user_model: str = st.sidebar.selectbox(
+    "**Model**", _options, format_func=format_model_name
+)
 
 prompt = st.sidebar.radio(
     label="**Promots**", options=["None"] + list(prompts_title.keys())

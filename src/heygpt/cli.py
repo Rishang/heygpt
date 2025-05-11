@@ -3,7 +3,7 @@ import sys
 from typing_extensions import Annotated
 from typing import List, Optional
 from pathlib import Path
-import json
+import yaml
 
 import uvicorn
 import rich
@@ -72,7 +72,7 @@ def ask(
             act = sh('echo "' + "\n".join(prompts_title) + '" | fzf -e').strip()
             if act == "":
                 raise Exception("maybe fzf not present on system")
-        except Exception as e:
+        except Exception:
             act = ask_prompt_input(items=prompts_title)
 
         if not act:
@@ -185,11 +185,14 @@ def config(
             c.write("{}")
 
     with open(config_path, "r") as f:
-        configs = json.loads(f.read())
+        try:
+            configs = yaml.safe_load(f)
+            if configs is None:
+                configs = {}
+        except yaml.YAMLError:
+            configs = {}
 
     with open(config_path, "w") as f:
-        new_configs = {}
-
         if prompt_file != "":
             configs["prompt_file"] = Path(prompt_file).absolute().as_posix()
         if prompt_url != "":
@@ -203,9 +206,8 @@ def config(
         if model != "":
             configs["model"] = model
 
-        new_configs = configs
-        print(json.dumps(new_configs))
-        f.write(json.dumps(new_configs))
+        print(yaml.dump(configs))
+        yaml.dump(configs, f)
 
 
 if __name__ == "__main__":
