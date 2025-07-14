@@ -108,23 +108,23 @@ if chat_input := st.chat_input("What is up?"):
 
 # Separate the "Copy to clipboard" button outside the user input block
 if st.session_state.messages:
-    col1, col2, col3, col4 = st.columns(4)
+    # Create a cleaner button layout without nested columns
+    button_col1, button_col2, button_col3, button_col4 = st.columns(4)
 
-    with col1:
-        col_btn1, col_btn_2, col_btn_3 = col1.columns(3)
-        with col_btn1:
-            copy_snippet = st.button("🗒️")
-            if copy_snippet:
-                last_response = st.session_state.messages[-1]["content"]
-                pyperclip.copy(last_response)
+    with button_col1:
+        copy_snippet = st.button("🗒️ Copy", key="copy_button")
 
-        with col_btn_2:
-            st.download_button(
-                label="⬇️",
-                data=st.session_state.messages[-1]["content"],
-                file_name="heygpt_output.txt",
-                mime="text/text",
-            )
+    with button_col2:
+        st.download_button(
+            label="⬇️ Download",
+            data=st.session_state.messages[-1]["content"],
+            file_name="heygpt_output.txt",
+            mime="text/text",
+            key="download_button",
+        )
 
-        if copy_snippet:
-            st.success("Copied to clipboard")
+    # Show success message in a separate container to avoid layout issues
+    if copy_snippet:
+        last_response = st.session_state.messages[-1]["content"]
+        pyperclip.copy(last_response)
+        st.success("Copied to clipboard!")
