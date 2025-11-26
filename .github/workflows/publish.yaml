@@ -1,37 +1,29 @@
-name: PyPy Release
+name: Publish to PyPI
 on:
   release:
-    types: [published, edited]
+    types: [published]
+
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
-  deploy:
+  publish:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.14"]
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: tag name
-        run: echo $GITHUB_REF_NAME
-
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: "3.14"
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v3
-        with:
-          enable-cache: true
+        uses: astral-sh/setup-uv@v4
 
-      - name: Build
+      - name: Build and Publish to PyPI
         working-directory: ./src
         run: |
           uv build
-
-      - name: Publish
-        working-directory: ./src
-        run: |
-          uv pip install twine
-          twine upload dist/* -u __token__ -p ${{ secrets.PYPI_TOKEN }}
+          uv publish --token ${{ secrets.PYPI_TOKEN }}
