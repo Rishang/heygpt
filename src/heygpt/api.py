@@ -1,8 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from heygpt.core import completion_openai_gpt, model
-from heygpt.prompts import make_prompt, PromptInput
+from litellm import completion
+from heygpt.core import model
+from heygpt.prompts import make_prompt, PromptInput, fmt_prompt
 
 from heygpt.serve_prompts import prompts
 
@@ -19,9 +20,23 @@ app.add_middleware(
 
 @app.post("/gpt")
 async def gpt(msg: PromptInput, model: str = model):
-    return completion_openai_gpt(
-        command=msg.prompt.Command, text=f"""{msg.text}""", model=model
+    # Build messages from command and text
+    messages = fmt_prompt(msg.prompt.Command) if msg.prompt.Command else []
+
+    if messages:
+        messages[-1]["content"] += f"\n\n{msg.text}"
+    else:
+        messages = [{"role": "user", "content": msg.text}]
+
+    # Use litellm completion directly
+    response = completion(
+        model=model,
+        messages=messages,
+        stream=False,
+        drop_params=True,
     )
+
+    return response.choices[0].message.content
 
 
 @app.get("/prompt-items")

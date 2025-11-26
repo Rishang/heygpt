@@ -33,15 +33,20 @@ try:
         else:
             configs = {}  # Default to empty dict if not a list or dict
 
-        if configs and "openai_key" in configs:
-            os.environ["OPENAI_API_KEY"] = configs["openai_key"]
-        if configs and "openai_endpoint" in configs:
-            os.environ["OPENAI_BASE_URL"] = configs.get(
-                "openai_endpoint", "https://api.openai.com/v1"
-            )
-            if "https://openrouter.ai/api/v1" in configs.get("openai_endpoint", ""):
-                os.environ["OPENROUTER_API_BASE"] = configs["openai_endpoint"]
-                os.environ["OPENROUTER_API_KEY"] = configs["openai_key"]
+        # Support both api_key (new) and openai_key (legacy) for backward compatibility
+        api_key = configs.get("api_key") or configs.get("openai_key")
+        if configs and api_key:
+            os.environ["OPENAI_API_KEY"] = api_key
+            # litellm uses OPENAI_API_KEY for OpenAI-compatible endpoints
+
+        # Support both api_endpoint (new) and openai_endpoint (legacy)
+        api_endpoint = configs.get("api_endpoint") or configs.get("openai_endpoint")
+        if configs and api_endpoint:
+            os.environ["OPENAI_BASE_URL"] = api_endpoint
+            # For OpenRouter, set additional environment variables
+            if "openrouter.ai" in api_endpoint:
+                os.environ["OPENROUTER_API_BASE"] = api_endpoint
+                os.environ["OPENROUTER_API_KEY"] = api_key
 except FileNotFoundError:
     configs = {}
 except yaml.YAMLError:  # Add YAMLError handling

@@ -77,7 +77,10 @@ def load_prompts(url: str = ""):
     return prompts
 
 
-def openai_fmt_prompt(messages: List[Message]):
+def fmt_prompt(messages: List[Message]):
+    """
+    Format messages for LLM API (compatible with OpenAI and litellm format).
+    """
     return [{"role": message.role, "content": message.content} for message in messages]
 
 

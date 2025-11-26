@@ -1,19 +1,21 @@
 import os
 
-import openai
 from rich.console import Console
 from rich.markdown import Markdown
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import FuzzyWordCompleter
-from litellm import completion
+from litellm import completion, transcription
 from heygpt.constant import configs
-from heygpt.prompts import openai_fmt_prompt, Message
-from heygpt.utils import log, notNone
+from heygpt.utils import notNone
 
 console = Console()
 
-openai.api_key = os.getenv("OPENAI_API_KEY", configs.get("openai_key"))
-openai.organization = os.getenv("OPENAI_ORG", configs.get("openai_org"))
+# Set API key for litellm (litellm uses OPENAI_API_KEY by default for OpenAI-compatible endpoints)
+api_key = (
+    os.getenv("OPENAI_API_KEY") or configs.get("api_key") or configs.get("openai_key")
+)
+if api_key:
+    os.environ["OPENAI_API_KEY"] = api_key
 
 __model__ = os.getenv("MODEL", configs.get("model"))
 if notNone(__model__, str):
@@ -37,66 +39,19 @@ def ask_prompt_input(items: list, title="Select item"):
     return text
 
 
-def completion_openai_gpt(
-    text: str = "",
-    command: list[Message] = [],
-    system: str = "",
-    model=model,
-    _print=False,
-    temperature=None,
-    stream=True,
-):
-    """
-    ref: https://docs.openai.com/api-reference/completions/create
-    """
-    out = ""
-    log.debug(f"model: {model}")
-    log.debug(f"command: {command}")
-    log.debug(f"system: {system}")
-    log.debug(f"text: {text}")
-    if system == "":
-        system = "Output has to be in markdown supported format.\n"
-
-    if not text:
-        raise Exception("No text found")
-
-    messages = openai_fmt_prompt(command)
-
-    if messages != []:
-        messages[-1]["content"] += "\n\n" + text
-    else:
-        messages = [{"role": "user", "content": text}]
-
-    if stream:
-        chat_completion = completion(
-            model=model,
-            messages=messages,
-            temperature=temperature,
-            stream=True,
-            drop_params=True,
-        )
-
-        for chunk in chat_completion:
-            # Process each chunk as needed
-            c = chunk.choices[0].delta.content or ""
-            out += c
-            if _print:
-                console.print(c, end="", markup=True)
-
-        return out
-    else:
-        chat_completion = completion(
-            model=model,
-            messages=messages,
-            temperature=temperature,
-            stream=False,
-            drop_params=True,
-        )
-
-        return chat_completion.choices[0].message.content
+# Export litellm completion and other utilities for direct use
+__all__ = ["completion", "model", "print_md", "wisper", "sh", "ask_prompt_input"]
 
 
 def wisper(audio_file):
+    """
+    Transcribe audio file using litellm (supports whisper models).
+    """
     with open(f"{audio_file}", "rb") as file:
-        transcript = openai.Audio.transcribe("whisper-1", file)
-    return transcript["text"]
+        # litellm supports transcription via the transcription function
+        # Use whisper-1 model for transcription
+        response = transcription(
+            model="whisper-1",
+            file=file,
+        )
+    return response["text"]

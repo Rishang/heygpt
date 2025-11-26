@@ -4,7 +4,7 @@ from litellm import completion
 
 from heygpt.core import model
 from heygpt.serve_prompts import prompts_title
-from heygpt.prompts import openai_fmt_prompt, configs
+from heygpt.prompts import fmt_prompt, configs
 
 
 def local_css(file_name="", style=""):
@@ -51,7 +51,7 @@ for message in st.session_state.messages:
 
 # React to user input
 if chat_input := st.chat_input("What is up?"):
-    # set stream to True if model is OpenAI
+    # set stream to True for most models (o1 models don't support streaming)
     stream = True
     if user_model.startswith("o1"):
         stream = False
@@ -63,7 +63,7 @@ if chat_input := st.chat_input("What is up?"):
     if prompt == "None":
         st.session_state.messages.append({"role": "user", "content": chat_input})
     else:
-        for i in openai_fmt_prompt(prompts_title[prompt]):
+        for i in fmt_prompt(prompts_title[prompt]):
             print(prompt)
             st.session_state.messages.append(i)
 

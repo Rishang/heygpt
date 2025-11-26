@@ -12,11 +12,11 @@ import typer
 
 from heygpt.utils import log
 from heygpt.constant import prompt_items_url
-from heygpt.prompts import load_prompts, make_prompt
+from litellm import completion
+from heygpt.prompts import load_prompts, make_prompt, fmt_prompt
 from heygpt.core import (
     model as _model,
     sh,
-    completion_openai_gpt,
     wisper,
     print_md,
     ask_prompt_input,
@@ -24,7 +24,7 @@ from heygpt.core import (
 
 app = typer.Typer(
     help="""
-HeyGPT CLI\n\nA simple command line tool to generate text using OpenAI GPT or Google Gemini based on ready-made templated prompts.
+HeyGPT CLI\n\nA simple command line tool to generate text using LLM models (via litellm) based on ready-made templated prompts.
 \n\n\nFor debug logs use: `export LOG_LEVEL=DEBUG` or `set LOG_LEVEL=DEBUG` on windows.""",
     pretty_exceptions_enable=False,
 )
@@ -44,13 +44,13 @@ def ask(
         _model,
         "--model",
         "-m",
-        help=f"default {_model} | OpenAI model name. info: https://platform.openai.com/docs/models/",
+        help=f"default {_model} | LLM model name (supports any model via litellm).",
     ),
     temperature: float = typer.Option(
         0.5,
         "--temperature",
         "-t",
-        help="Temperature value for openai, more temperature more randomness",
+        help="Temperature value for LLM, more temperature more randomness",
     ),
     raw: bool = typer.Option(
         False,
@@ -102,27 +102,42 @@ def ask(
         text = Prompt.ask("[blue]Enter text")
 
     # log.debug(text)
-    stream = False
-    if model.startswith("o1"):
-        completion = completion_openai_gpt(
-            command=command,
-            text=text,
-            model=model,
-            _print=raw,
-            stream=stream,
-        )
+    # Build messages from command and text
+    messages = fmt_prompt(command) if command else []
+
+    if messages:
+        messages[-1]["content"] += "\n\n" + text
     else:
-        stream = True
-        completion = completion_openai_gpt(
-            command=command,
-            text=text,
+        messages = [{"role": "user", "content": text}]
+
+    # Determine streaming based on model
+    stream_enabled = not model.startswith("o1")
+
+    if stream_enabled:
+        # Stream the response
+        chat_completion = completion(
             model=model,
-            _print=raw,
+            messages=messages,
             temperature=temperature,
-            stream=stream,
+            stream=True,
+            drop_params=True,
         )
 
-    content = completion
+        content = ""
+        for chunk in chat_completion:
+            c = chunk.choices[0].delta.content or ""
+            content += c
+            if raw:
+                print(c, end="", flush=True)
+    else:
+        # Non-streaming response
+        chat_completion = completion(
+            model=model,
+            messages=messages,
+            stream=False,
+            drop_params=True,
+        )
+        content = chat_completion.choices[0].message.content
 
     if not raw:
         print_md(content)
@@ -171,43 +186,72 @@ def stream():
 def config(
     prompt_file: str = typer.Option("", help="Prompt file path."),
     prompt_url: str = typer.Option("", help="Prompt file url."),
-    openai_key: str = typer.Option("", help="OpenAI API key."),
-    openai_endpoint: str = typer.Option("", help="OpenAI endpoint."),
-    openai_org: str = typer.Option("", help="OpenAI organization id."),
+    api_key: str = typer.Option(
+        "", help="API key (supports OpenAI, Anthropic, etc. via litellm)."
+    ),
+    api_endpoint: str = typer.Option("", help="API endpoint URL."),
+    openai_key: str = typer.Option(
+        "", help="[Deprecated] Use --api-key instead. OpenAI API key."
+    ),
+    openai_endpoint: str = typer.Option(
+        "", help="[Deprecated] Use --api-endpoint instead. OpenAI endpoint."
+    ),
+    openai_org: str = typer.Option("", help="[Deprecated] OpenAI organization id."),
     model: str = typer.Option("", help="LLM model name."),
 ):
     from heygpt.constant import config_path
 
     if not Path(config_path).parent.is_dir():
         Path(config_path).parent.mkdir(parents=True)
-    if not Path(config_path).is_file():
+
+    # Load existing config (support YAML list format)
+    loaded_yaml = []
+    configs = {}
+
+    if Path(config_path).is_file():
+        with open(config_path, "r") as f:
+            try:
+                loaded_yaml = yaml.safe_load(f)
+                if isinstance(loaded_yaml, list) and len(loaded_yaml) > 0:
+                    configs = loaded_yaml[0] if isinstance(loaded_yaml[0], dict) else {}
+                elif isinstance(loaded_yaml, dict):
+                    configs = loaded_yaml
+                    loaded_yaml = [configs]  # Convert to list format
+                else:
+                    loaded_yaml = []
+            except yaml.YAMLError:
+                loaded_yaml = []
+    else:
+        # Create new file with empty list
         with open(config_path, "w") as c:
-            c.write("{}")
+            yaml.dump([], c)
 
-    with open(config_path, "r") as f:
-        try:
-            configs = yaml.safe_load(f)
-            if configs is None:
-                configs = {}
-        except yaml.YAMLError:
-            configs = {}
+    # Update configs with new values
+    if prompt_file != "":
+        configs["prompt_file"] = Path(prompt_file).absolute().as_posix()
+    if prompt_url != "":
+        configs["prompt_url"] = prompt_url
+    # Support both new and deprecated options
+    if api_key != "":
+        configs["api_key"] = api_key
+    elif openai_key != "":
+        configs["api_key"] = openai_key
+        configs["openai_key"] = openai_key  # Keep for backward compatibility
+    if api_endpoint != "":
+        configs["api_endpoint"] = api_endpoint
+    elif openai_endpoint != "":
+        configs["api_endpoint"] = openai_endpoint
+        configs["openai_endpoint"] = openai_endpoint  # Keep for backward compatibility
+    if openai_org != "":
+        configs["openai_org"] = openai_org
+    if model != "":
+        configs["model"] = model
 
+    # Write back as YAML list format
+    output_data = [configs] if configs else []
     with open(config_path, "w") as f:
-        if prompt_file != "":
-            configs["prompt_file"] = Path(prompt_file).absolute().as_posix()
-        if prompt_url != "":
-            configs["prompt_url"] = prompt_url
-        if openai_key != "":
-            configs["openai_key"] = openai_key
-        if openai_org != "":
-            configs["openai_org"] = openai_org
-        if openai_endpoint != "":
-            configs["openai_endpoint"] = openai_endpoint
-        if model != "":
-            configs["model"] = model
-
-        print(yaml.dump(configs))
-        yaml.dump(configs, f)
+        print(yaml.dump(output_data))
+        yaml.dump(output_data, f)
 
 
 if __name__ == "__main__":
